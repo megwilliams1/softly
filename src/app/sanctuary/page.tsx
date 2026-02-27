@@ -1,6 +1,7 @@
 import DailyAffirmation from "@/components/sanctuary/DailyAffirmation";
 import MoodCheckin from "@/components/sanctuary/MoodCheckin";
 import GratitudeJournal from "@/components/sanctuary/GratitudeJournal";
+import SelfCareReminders from "@/components/sanctuary/SelfCareReminders";
 
 export default function SanctuaryPage() {
   return (
@@ -22,12 +23,20 @@ export default function SanctuaryPage() {
         <MoodCheckin />
       </section>
 
-      <section>
+      <section style={{ marginBottom: "48px" }}>
         <h2 className="text-2xl mb-1">Gratitude</h2>
         <p style={{ color: "var(--color-stone)", fontSize: "0.9rem", marginBottom: "20px" }}>
           Three things, however small.
         </p>
         <GratitudeJournal />
+      </section>
+
+      <section>
+        <h2 className="text-2xl mb-1">Self-Care Reminders</h2>
+        <p style={{ color: "var(--color-stone)", fontSize: "0.9rem", marginBottom: "20px" }}>
+          Little nudges, just for you.
+        </p>
+        <SelfCareReminders />
       </section>
     </main>
   );
