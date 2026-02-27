@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# softly
+
+A mom's weekly companion app. Softly is split into two halves: **The Garden** for family planning and **The Sanctuary** for personal self-care.
+
+Built with love, designed to feel calm and intentional.
+
+---
+
+## Features
+
+### 🌿 The Garden
+- **Meal Planner** — 7-day weekly grid with add/edit modal, saved to localStorage
+- **Kids' Activities** — Color-coded activity scheduler per child with a weekly grid
+- **Groceries & Errands** — Tabbed checklist with check-off and clear completed
+
+### 🌸 The Sanctuary
+- **Daily Affirmation** — A new curated affirmation each day, tap for another
+- **Mood Check-in** — 5 warm mood options to log how you're feeling today
+- **Gratitude Journal** — Three prompted entries per day with yesterday's history
+- **Self-Care Reminders** — Personal reminder cards that reset daily
+
+### ✨ Extra
+- **Weekly Reset** — A guided 5-step Sunday flow to reflect and set intentions
+- **Seasonal Theming** — Colors shift automatically with the current season
+- **Dark Mode** — Warm dark palette, toggled from the navbar, no flash on load
+- **Fully responsive** — Works on mobile and desktop
+
+---
+
+## Tech Stack
+
+- [Next.js 14](https://nextjs.org) (App Router)
+- [React 18](https://react.dev)
+- [TypeScript](https://www.typescriptlang.org)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Lucide React](https://lucide.dev)
+- localStorage (MVP data persistence)
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+src/
+├── app/
+│   ├── garden/        # The Garden page
+│   ├── sanctuary/     # The Sanctuary page
+│   ├── reset/         # Weekly Reset flow
+│   ├── globals.css    # Design system, seasonal + dark mode variables
+│   └── layout.tsx     # Root layout with Navbar and SeasonalBackground
+├── components/
+│   ├── garden/        # Meal grid, activity scheduler, checklist
+│   ├── sanctuary/     # Affirmation, mood, gratitude, reminders
+│   ├── reset/         # Weekly reset flow
+│   ├── layout/        # Navbar
+│   └── shared/        # SeasonalBackground
+├── lib/
+│   └── hooks/         # useMeals, useChildren, useActivities, useMood,
+│                      # useGratitude, useReminders, useWeeklyReset, useTheme
+└── data/
+    └── affirmations.json
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design System
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Display font:** Cormorant Garamond
+- **Body font:** DM Sans
+- **Palette:** Warm creams, sage greens, bloom pinks, earthy browns
+- **Seasonal colors:** Spring 🌸 · Summer ☀️ · Fall 🍂 · Winter ❄️
+- **Dark mode:** Warm dark browns, not harsh blacks
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployed on [Vercel](https://vercel.com). Pushes to `main` trigger automatic redeployment.
