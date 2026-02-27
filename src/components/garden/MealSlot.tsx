@@ -17,6 +17,7 @@ export default function MealSlot({ time, value, animDelay, onClick }: Props) {
   return (
     <button
       onClick={onClick}
+      aria-label={value ? `${timeLabels[time]}: ${value} — click to edit` : `${timeLabels[time]}: empty — click to add meal`}
       className="animate-bloom-up"
       style={{
         animationDelay: `${animDelay}s`,
