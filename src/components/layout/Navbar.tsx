@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sprout, Sparkles } from "lucide-react";
+import { Sprout, Sparkles, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/lib/hooks/useTheme";
 
 const links = [
   { href: "/garden", label: "The Garden", icon: Sprout },
@@ -15,6 +16,7 @@ function isSunday() {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav
@@ -81,6 +83,26 @@ export default function Navbar() {
               </Link>
             );
           })}
+          {/* Dark mode toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "34px",
+              height: "34px",
+              borderRadius: "50%",
+              backgroundColor: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--color-stone)",
+              marginLeft: "4px",
+            }}
+          >
+            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
         </div>
       </div>
     </nav>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DayKey } from "@/lib/hooks/useMeals";
 import { useChildren } from "@/lib/hooks/useChildren";
 import { useActivities, Activity } from "@/lib/hooks/useActivities";
+import { useTheme } from "@/lib/hooks/useTheme";
 import ActivityModal from "./ActivityModal";
 import AddChildModal from "./AddChildModal";
 
@@ -22,6 +23,13 @@ type ActivityModalState = { day: DayKey; activity?: Activity } | null;
 export default function ActivityScheduler() {
   const { children, addChild } = useChildren();
   const { activities, addActivity, updateActivity, deleteActivity } = useActivities();
+  const { theme } = useTheme();
+
+  function childBg(color: string) {
+    return theme === "dark"
+      ? `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), ${color}`
+      : color;
+  }
 
   const [activityModal, setActivityModal] = useState<ActivityModalState>(null);
   const [showAddChild, setShowAddChild] = useState(false);
@@ -49,7 +57,7 @@ export default function ActivityScheduler() {
               gap: "6px",
               padding: "6px 12px 6px 6px",
               borderRadius: "var(--radius-full)",
-              backgroundColor: child.color,
+              background: childBg(child.color),
               fontSize: "0.85rem",
               fontFamily: "var(--font-body)",
               color: "var(--color-soil)",
@@ -145,7 +153,7 @@ export default function ActivityScheduler() {
                           textAlign: "left",
                           padding: "8px 10px",
                           borderRadius: "var(--radius-sm)",
-                          backgroundColor: child.color,
+                          background: childBg(child.color),
                           border: "none",
                           cursor: "pointer",
                           width: "100%",

@@ -50,6 +50,39 @@
   --color-seasonal-accent: #f7e6b0;
 }
 
+/* ─── Dark Mode ───────────────────────────────────────── */
+[data-theme="dark"] {
+  /* Backgrounds */
+  --color-cream: #1c1814;
+  --color-mist: #1a1f1a;
+  --color-white: #2c2723;
+
+  /* Primary Palette — warm-adjusted for dark */
+  --color-bloom-pink: #c47888;
+  --color-sage: #7a9a6c;
+  --color-butter: #b89830;
+  --color-lavender: #9080b8;
+
+  /* Rich Tones — inverted for dark */
+  --color-soil: #e8ddd4;
+  --color-moss: #94a888;
+  --color-blush-deep: #b06878;
+
+  /* Neutrals */
+  --color-pebble: #786e66;
+  --color-stone: #9a8e86;
+  --color-shadow: #f0e8e0;
+
+  /* Shadows — stronger on dark */
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lift: 0 8px 30px rgba(0, 0, 0, 0.55);
+
+  /* Seasonal accent — toned down for dark */
+  --color-seasonal-primary: #8a6070;
+  --color-seasonal-secondary: #5a7a52;
+}
+
 /* ─── Seasonal Overrides ──────────────────────────────── */
 [data-season="spring"] {
   --color-seasonal-primary: #f2c4ce;
