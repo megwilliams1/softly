@@ -50,7 +50,7 @@ export default function Navbar() {
                   fontWeight: isActive ? 500 : 400,
                   color: isActive ? "var(--color-soil)" : "var(--color-stone)",
                   backgroundColor: isActive
-                    ? "var(--color-bloom-pink)"
+                    ? "var(--color-seasonal-primary)"
                     : "transparent",
                   textDecoration: "none",
                 }}
