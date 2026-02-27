@@ -179,6 +179,7 @@ export default function ActivityScheduler() {
                   {/* Add button */}
                   <button
                     onClick={() => setActivityModal({ day: key })}
+                    aria-label={`Add activity for ${label}`}
                     style={{
                       padding: "6px",
                       borderRadius: "var(--radius-sm)",

@@ -81,6 +81,8 @@ export default function SelfCareReminders() {
                 <div style={{ display: "flex", gap: "6px", marginTop: "4px" }}>
                   <button
                     onClick={() => toggleDone(reminder.id)}
+                    aria-pressed={isDone}
+                    aria-label={isDone ? `Mark "${reminder.text}" as not done` : `Mark "${reminder.text}" as done today`}
                     style={{
                       fontSize: "0.75rem",
                       padding: "4px 10px",
@@ -101,6 +103,7 @@ export default function SelfCareReminders() {
 
                   <button
                     onClick={() => deleteReminder(reminder.id)}
+                    aria-label={`Delete "${reminder.text}"`}
                     style={{
                       fontSize: "0.75rem",
                       padding: "4px 8px",

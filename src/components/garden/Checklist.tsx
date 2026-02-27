@@ -88,6 +88,8 @@ export default function Checklist() {
           <button
             key={item.id}
             onClick={() => handleToggle(item.id)}
+            aria-label={item.checked ? `Uncheck ${item.label}` : `Check off ${item.label}`}
+            aria-pressed={item.checked}
             className={lastToggledId === item.id ? "animate-bloom-pop" : ""}
             style={{
               display: "flex",
