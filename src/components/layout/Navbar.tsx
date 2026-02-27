@@ -9,6 +9,10 @@ const links = [
   { href: "/sanctuary", label: "The Sanctuary", icon: Sparkles },
 ];
 
+function isSunday() {
+  return new Date().getDay() === 0;
+}
+
 export default function Navbar() {
   const pathname = usePathname();
 
@@ -37,6 +41,23 @@ export default function Navbar() {
 
         {/* Nav links */}
         <div className="flex items-center gap-2">
+          {isSunday() && (
+            <Link
+              href="/reset"
+              style={{
+                fontSize: "0.8rem",
+                fontFamily: "var(--font-body)",
+                color: "var(--color-moss)",
+                backgroundColor: "var(--color-mist)",
+                padding: "5px 12px",
+                borderRadius: "var(--radius-full)",
+                textDecoration: "none",
+                border: "1px solid rgba(168, 184, 154, 0.4)",
+              }}
+            >
+              Time to reset 🌿
+            </Link>
+          )}
           {links.map(({ href, label, icon: Icon }) => {
             const isActive = pathname.startsWith(href);
             return (
@@ -50,7 +71,7 @@ export default function Navbar() {
                   fontWeight: isActive ? 500 : 400,
                   color: isActive ? "var(--color-soil)" : "var(--color-stone)",
                   backgroundColor: isActive
-                    ? "var(--color-bloom-pink)"
+                    ? "var(--color-seasonal-primary)"
                     : "transparent",
                   textDecoration: "none",
                 }}

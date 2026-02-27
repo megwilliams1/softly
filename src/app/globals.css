@@ -76,16 +76,34 @@
 }
 
 /* ─── Base Styles ─────────────────────────────────────── */
-html,
+html {
+  background-color: var(--color-cream);
+}
+
 body {
   font-family: var(--font-body);
-  background-color: var(--color-cream);
+  background-color: transparent;
   color: var(--color-moss);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 h1, h2, h3 {
   font-family: var(--font-display);
   line-height: 1.2;
   color: var(--color-soil);
+}
+
+/* ─── Accessibility — Focus States ───────────────────── */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-sage);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-sage) !important;
+  border-color: var(--color-sage) !important;
 }
