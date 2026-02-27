@@ -76,10 +76,13 @@
 }
 
 /* ─── Base Styles ─────────────────────────────────────── */
-html,
+html {
+  background-color: var(--color-cream);
+}
+
 body {
   font-family: var(--font-body);
-  background-color: var(--color-cream);
+  background-color: transparent;
   color: var(--color-moss);
   line-height: 1.6;
 }
