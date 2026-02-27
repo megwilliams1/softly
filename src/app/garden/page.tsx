@@ -1,5 +1,6 @@
 import MealGrid from "@/components/garden/MealGrid";
 import ActivityScheduler from "@/components/garden/ActivityScheduler";
+import Checklist from "@/components/garden/Checklist";
 
 export default function GardenPage() {
   return (
@@ -17,9 +18,14 @@ export default function GardenPage() {
         <MealGrid />
       </section>
 
-      <section>
+      <section style={{ marginBottom: "48px" }}>
         <h2 className="text-2xl mb-6">Kids' Activities</h2>
         <ActivityScheduler />
+      </section>
+
+      <section>
+        <h2 className="text-2xl mb-6">Groceries & Errands</h2>
+        <Checklist />
       </section>
     </main>
   );
