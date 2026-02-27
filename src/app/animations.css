@@ -1,0 +1,59 @@
+/* ─── Keyframes ───────────────────────────────────────── */
+@keyframes bloom-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+
+@keyframes petal-drift {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes bloom-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Utility Classes ─────────────────────────────────── */
+.animate-bloom-up {
+  animation: bloom-up 0.4s ease-out forwards;
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2.5s ease-in-out infinite;
+}
+
+.animate-petal-drift {
+  animation: petal-drift 0.5s ease-out forwards;
+}
+
+.animate-bloom-pop {
+  animation: bloom-pop 0.3s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
