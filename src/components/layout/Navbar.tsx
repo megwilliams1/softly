@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sprout, Sparkles, Sun, Moon } from "lucide-react";
+import { Sprout, Sparkles, Flame, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/lib/hooks/useTheme";
 
 const links = [
-  { href: "/garden", label: "The Garden", icon: Sprout },
+  { href: "/garden",    label: "The Garden",    icon: Sprout   },
   { href: "/sanctuary", label: "The Sanctuary", icon: Sparkles },
+  { href: "/hearth",    label: "The Hearth",    icon: Flame    },
 ];
 
 function isSunday() {
