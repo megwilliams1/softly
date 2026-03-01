@@ -20,9 +20,9 @@ const DAYS: { key: DayKey; label: string }[] = [
 
 type ActivityModalState = { day: DayKey; activity?: Activity } | null;
 
-export default function ActivityScheduler() {
-  const { children, addChild } = useChildren();
-  const { activities, addActivity, updateActivity, deleteActivity } = useActivities();
+export default function ActivityScheduler({ uid }: { uid: string | null }) {
+  const { children, addChild } = useChildren(uid);
+  const { activities, addActivity, updateActivity, deleteActivity } = useActivities(uid);
   const { theme } = useTheme();
 
   function childBg(color: string) {

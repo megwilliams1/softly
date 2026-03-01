@@ -1,6 +1,14 @@
+"use client";
+
+import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import WeeklyReset from "@/components/reset/WeeklyReset";
 
 export default function ResetPage() {
+  const { user, loading } = useRequireAuth();
+  const uid = user?.uid ?? null;
+
+  if (loading || !user) return null;
+
   return (
     <main
       className="min-h-screen px-6 py-12"
@@ -15,7 +23,7 @@ export default function ResetPage() {
         </div>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <WeeklyReset />
+          <WeeklyReset uid={uid} />
         </div>
       </div>
     </main>

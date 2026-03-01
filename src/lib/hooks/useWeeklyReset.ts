@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "softly:reset:history";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 type ResetEntry = {
   weekKey: string;
@@ -19,29 +24,30 @@ export function thisWeekSunday(): string {
   return sunday.toISOString().split("T")[0];
 }
 
-export function useWeeklyReset() {
+export function useWeeklyReset(uid: string | null) {
   const [history, setHistory] = useState<ResetEntry[]>([]);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setHistory(JSON.parse(stored));
-    } catch {}
-  }, []);
+    if (!uid) return;
+    const q = collection(db, "users", uid, "weeklyResets");
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setHistory(snap.docs.map((d) => d.data() as ResetEntry));
+    });
+    return unsubscribe;
+  }, [uid]);
 
   const weekKey = thisWeekSunday();
   const thisWeekDone = history.some((e) => e.weekKey === weekKey);
 
-  function saveReset(weekMood: string, intention: string) {
+  async function saveReset(weekMood: string, intention: string) {
+    if (!uid) return;
     const entry: ResetEntry = {
       weekKey,
       weekMood,
       intention,
       completedAt: new Date().toISOString(),
     };
-    const next = [...history.filter((e) => e.weekKey !== weekKey), entry];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    setHistory(next);
+    await setDoc(doc(db, "users", uid, "weeklyResets", weekKey), entry);
   }
 
   return { thisWeekDone, saveReset };

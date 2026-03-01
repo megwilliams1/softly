@@ -336,3 +336,25 @@ As a user, I want to browse and share recipes with the Softly community so that 
 - [ ] All components match existing design system (CSS variables, animations, modal pattern)
 - [ ] Dark mode compatible
 - [ ] Mobile responsive (375px+)
+
+---
+
+## Phase 9 — Auth & Cloud Sync
+
+### TICKET-018 · Full Authentication + Firestore Migration
+
+**Branch:** `feature/ticket-018-auth-and-firestore`
+
+**User Story:**
+As a user, I want to sign in to Softly so that my data is saved to the cloud and available on any device.
+
+**Acceptance Criteria:**
+- [ ] Home page `/` is a sign-in / sign-up page
+- [ ] Sign-up: display name, email, password, confirm password
+- [ ] Sign-in: email + password, forgot password link
+- [ ] Google sign-in available on both forms
+- [ ] All protected pages redirect to `/` if not signed in
+- [ ] Navbar hides Garden/Sanctuary/Hearth/Reset links when signed out
+- [ ] All personal data (meals, activities, children, checklist, mood, gratitude, reminders, weekly reset) stored in Firestore per user
+- [ ] Data syncs across devices when signed in to same account
+- [ ] Firestore security rules protect all user data

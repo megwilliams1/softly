@@ -19,8 +19,8 @@ const MEAL_TIMES: MealTime[] = ["breakfast", "lunch", "dinner"];
 
 type ModalState = { day: DayKey; time: MealTime } | null;
 
-export default function MealGrid() {
-  const { meals, setMeal } = useMeals();
+export default function MealGrid({ uid }: { uid: string | null }) {
+  const { meals, setMeal } = useMeals(uid);
   const [modal, setModal] = useState<ModalState>(null);
 
   return (

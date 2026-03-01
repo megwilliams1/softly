@@ -2,18 +2,19 @@
 
 import { useState } from "react";
 import { Flame } from "lucide-react";
-import { useAuth } from "@/lib/hooks/useAuth";
+import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useRecipes, type Recipe } from "@/lib/hooks/useRecipes";
-import AuthButton from "@/components/hearth/AuthButton";
 import RecipeCard from "@/components/hearth/RecipeCard";
 import SubmitRecipeModal from "@/components/hearth/SubmitRecipeModal";
 import RecipeDetailModal from "@/components/hearth/RecipeDetailModal";
 
 export default function HearthPage() {
-  const { user, loading, signIn, signOut } = useAuth();
+  const { user, loading } = useRequireAuth();
   const { recipes, loading: recipesLoading, submitRecipe, deleteRecipe } = useRecipes();
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+
+  if (loading || !user) return null;
 
   return (
     <main style={{ backgroundColor: "var(--color-cream)", minHeight: "100vh" }}>
@@ -48,16 +49,10 @@ export default function HearthPage() {
             </p>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingTop: "4px" }}>
-            <AuthButton
-              user={user}
-              loading={loading}
-              onSignIn={signIn}
-              onSignOut={signOut}
-            />
-            {!loading && (
+          {user && !loading && (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingTop: "4px" }}>
               <button
-                onClick={user ? () => setShowSubmitModal(true) : signIn}
+                onClick={() => setShowSubmitModal(true)}
                 style={{
                   padding: "9px 18px",
                   borderRadius: "var(--radius-full)",
@@ -73,8 +68,8 @@ export default function HearthPage() {
               >
                 Share a Recipe
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
