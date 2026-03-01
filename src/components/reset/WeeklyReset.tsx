@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useWeeklyReset } from "@/lib/hooks/useWeeklyReset";
 import affirmations from "@/data/affirmations.json";
@@ -64,10 +64,15 @@ function StepShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function WeeklyReset() {
-  const { thisWeekDone, saveReset } = useWeeklyReset();
+export default function WeeklyReset({ uid }: { uid: string | null }) {
+  const { thisWeekDone, saveReset } = useWeeklyReset(uid);
   const [step, setStep] = useState(1);
-  const [completed, setCompleted] = useState(thisWeekDone);
+  const [completed, setCompleted] = useState(false);
+
+  // Sync completion state when Firestore data loads
+  useEffect(() => {
+    if (thisWeekDone) setCompleted(true);
+  }, [thisWeekDone]);
   const [weekMood, setWeekMood] = useState("");
   const [customMood, setCustomMood] = useState("");
   const [intention, setIntention] = useState("");

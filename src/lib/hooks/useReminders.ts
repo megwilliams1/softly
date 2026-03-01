@@ -1,8 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "softly:sanctuary:reminders";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export type Reminder = {
   id: string;
@@ -15,41 +22,40 @@ export function todayKey(): string {
   return new Date().toISOString().split("T")[0];
 }
 
-export function useReminders() {
+export function useReminders(uid: string | null) {
   const [reminders, setReminders] = useState<Reminder[]>([]);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setReminders(JSON.parse(stored));
-    } catch {}
-  }, []);
+    if (!uid) return;
+    const q = collection(db, "users", uid, "reminders");
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setReminders(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Reminder[]);
+    });
+    return unsubscribe;
+  }, [uid]);
 
-  function persist(next: Reminder[]) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    setReminders(next);
+  async function addReminder(text: string, emoji: string) {
+    if (!uid) return;
+    await addDoc(collection(db, "users", uid, "reminders"), {
+      text,
+      emoji,
+      doneDate: null,
+    });
   }
 
-  function addReminder(text: string, emoji: string) {
-    persist([
-      ...reminders,
-      { id: crypto.randomUUID(), text, emoji, doneDate: null },
-    ]);
-  }
-
-  function toggleDone(id: string) {
+  async function toggleDone(id: string) {
+    if (!uid) return;
+    const reminder = reminders.find((r) => r.id === id);
+    if (!reminder) return;
     const today = todayKey();
-    persist(
-      reminders.map((r) =>
-        r.id === id
-          ? { ...r, doneDate: r.doneDate === today ? null : today }
-          : r
-      )
-    );
+    await updateDoc(doc(db, "users", uid, "reminders", id), {
+      doneDate: reminder.doneDate === today ? null : today,
+    });
   }
 
-  function deleteReminder(id: string) {
-    persist(reminders.filter((r) => r.id !== id));
+  async function deleteReminder(id: string) {
+    if (!uid) return;
+    await deleteDoc(doc(db, "users", uid, "reminders", id));
   }
 
   return { reminders, addReminder, toggleDone, deleteReminder };

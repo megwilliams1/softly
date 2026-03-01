@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useReminders, todayKey } from "@/lib/hooks/useReminders";
 
-export default function SelfCareReminders() {
-  const { reminders, addReminder, toggleDone, deleteReminder } = useReminders();
+export default function SelfCareReminders({ uid }: { uid: string | null }) {
+  const { reminders, addReminder, toggleDone, deleteReminder } = useReminders(uid);
   const [text, setText] = useState("");
   const [emoji, setEmoji] = useState("");
 
