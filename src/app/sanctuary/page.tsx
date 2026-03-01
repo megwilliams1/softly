@@ -5,10 +5,12 @@ import DailyAffirmation from "@/components/sanctuary/DailyAffirmation";
 import MoodCheckin from "@/components/sanctuary/MoodCheckin";
 import GratitudeJournal from "@/components/sanctuary/GratitudeJournal";
 import SelfCareReminders from "@/components/sanctuary/SelfCareReminders";
+import WeeklyGardenSummary from "@/components/sanctuary/WeeklyGardenSummary";
 
 export default function SanctuaryPage() {
   const { user, loading } = useRequireAuth();
   const uid = user?.uid ?? null;
+  const isSunday = new Date().getDay() === 0;
 
   if (loading || !user) return null;
 
@@ -21,6 +23,13 @@ export default function SanctuaryPage() {
       <p style={{ color: "var(--color-stone)", marginBottom: "32px" }}>
         Your personal space lives here.
       </p>
+
+      {/* On Sundays, the weekly summary leads everything */}
+      {isSunday && (
+        <section style={{ marginBottom: "48px" }}>
+          <WeeklyGardenSummary uid={uid} prominent />
+        </section>
+      )}
 
       <section style={{ marginBottom: "48px" }}>
         <DailyAffirmation />
@@ -38,6 +47,13 @@ export default function SanctuaryPage() {
         </p>
         <GratitudeJournal uid={uid} />
       </section>
+
+      {/* Every other day, the summary lives here — after gratitude */}
+      {!isSunday && (
+        <section style={{ marginBottom: "48px" }}>
+          <WeeklyGardenSummary uid={uid} />
+        </section>
+      )}
 
       <section>
         <h2 className="text-2xl mb-1">Self-Care Reminders</h2>
