@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "softly:garden:meals";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export type MealTime = "breakfast" | "lunch" | "dinner";
 export type DayKey = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
@@ -20,22 +20,24 @@ function emptyMeals(): MealsData {
   ) as MealsData;
 }
 
-export function useMeals() {
-  const [meals, setMeals] = useState<MealsData>(emptyMeals);
+export function useMeals(uid: string | null) {
+  const [meals, setMealsState] = useState<MealsData>(emptyMeals());
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setMeals(JSON.parse(stored));
-    } catch {}
-  }, []);
-
-  function setMeal(day: DayKey, time: MealTime, value: string) {
-    setMeals((prev) => {
-      const next = { ...prev, [day]: { ...prev[day], [time]: value } };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "meals", "current");
+    const unsubscribe = onSnapshot(ref, (snap) => {
+      if (snap.exists()) {
+        setMealsState((prev) => ({ ...emptyMeals(), ...prev, ...(snap.data() as MealsData) }));
+      }
     });
+    return unsubscribe;
+  }, [uid]);
+
+  async function setMeal(day: DayKey, time: MealTime, value: string) {
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "meals", "current");
+    await setDoc(ref, { [day]: { [time]: value } }, { merge: true });
   }
 
   return { meals, setMeal };

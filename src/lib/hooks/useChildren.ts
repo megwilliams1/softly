@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "softly:garden:children";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export type Child = {
   id: string;
@@ -21,31 +27,26 @@ export const CHILD_COLORS = [
   "#d4845a", // terra
 ];
 
-export function useChildren() {
+export function useChildren(uid: string | null) {
   const [children, setChildren] = useState<Child[]>([]);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setChildren(JSON.parse(stored));
-    } catch {}
-  }, []);
-
-  function addChild(name: string, color: string) {
-    const child: Child = { id: crypto.randomUUID(), name, color };
-    setChildren((prev) => {
-      const next = [...prev, child];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
+    if (!uid) return;
+    const q = collection(db, "users", uid, "children");
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setChildren(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Child[]);
     });
+    return unsubscribe;
+  }, [uid]);
+
+  async function addChild(name: string, color: string) {
+    if (!uid) return;
+    await addDoc(collection(db, "users", uid, "children"), { name, color });
   }
 
-  function removeChild(id: string) {
-    setChildren((prev) => {
-      const next = prev.filter((c) => c.id !== id);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
+  async function removeChild(id: string) {
+    if (!uid) return;
+    await deleteDoc(doc(db, "users", uid, "children", id));
   }
 
   return { children, addChild, removeChild };

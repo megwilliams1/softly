@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "softly:sanctuary:gratitude";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export type GratitudeEntry = [string, string, string];
 export type GratitudeHistory = Record<string, GratitudeEntry>;
@@ -17,22 +17,26 @@ function yesterdayKey(): string {
   return d.toISOString().split("T")[0];
 }
 
-export function useGratitude() {
+export function useGratitude(uid: string | null) {
   const [history, setHistory] = useState<GratitudeHistory>({});
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setHistory(JSON.parse(stored));
-    } catch {}
-  }, []);
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "gratitude", "current");
+    const unsubscribe = onSnapshot(ref, (snap) => {
+      if (snap.exists()) setHistory(snap.data() as GratitudeHistory);
+    });
+    return unsubscribe;
+  }, [uid]);
 
   const todayEntry = history[todayKey()] ?? null;
   const yesterdayEntry = history[yesterdayKey()] ?? null;
 
-  function saveEntry(entries: GratitudeEntry) {
+  async function saveEntry(entries: GratitudeEntry) {
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "gratitude", "current");
     const next = { ...history, [todayKey()]: entries };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    await setDoc(ref, next);
     setHistory(next);
   }
 

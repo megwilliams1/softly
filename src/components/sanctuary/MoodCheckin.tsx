@@ -11,8 +11,8 @@ const MOODS: { key: MoodKey; emoji: string; label: string; subtext: string }[] =
   { key: "drained",  emoji: "🥀", label: "Drained",  subtext: "Running on empty" },
 ];
 
-export default function MoodCheckin() {
-  const { todayMood, setMood } = useMood();
+export default function MoodCheckin({ uid }: { uid: string | null }) {
+  const { todayMood, setMood } = useMood(uid);
   const [lastSelected, setLastSelected] = useState<MoodKey | null>(null);
 
   function handleSelect(key: MoodKey) {

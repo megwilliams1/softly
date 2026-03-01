@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGratitude, GratitudeEntry } from "@/lib/hooks/useGratitude";
 
 const PLACEHOLDERS = [
@@ -23,13 +23,19 @@ const inputStyle = {
   resize: "none" as const,
 };
 
-export default function GratitudeJournal() {
-  const { todayEntry, yesterdayEntry, saveEntry } = useGratitude();
-  const [isEditing, setIsEditing] = useState(!todayEntry);
-  const [values, setValues] = useState<GratitudeEntry>(
-    todayEntry ?? ["", "", ""]
-  );
+export default function GratitudeJournal({ uid }: { uid: string | null }) {
+  const { todayEntry, yesterdayEntry, saveEntry } = useGratitude(uid);
+  const [isEditing, setIsEditing] = useState(true);
+  const [values, setValues] = useState<GratitudeEntry>(["", "", ""]);
   const [saved, setSaved] = useState(false);
+
+  // Sync state when Firestore data loads
+  useEffect(() => {
+    if (todayEntry) {
+      setIsEditing(false);
+      setValues(todayEntry);
+    }
+  }, [todayEntry]);
 
   function handleSave() {
     const trimmed = values.map((v) => v.trim()) as GratitudeEntry;

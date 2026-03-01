@@ -1,12 +1,20 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/hooks/useAuth";
+import AuthPage from "@/components/auth/AuthPage";
+
 export default function Home() {
-  return (
-    <main className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-5xl mb-3">softly</h1>
-        <p className="text-sm" style={{ color: "var(--color-stone)" }}>
-          your weekly sanctuary
-        </p>
-      </div>
-    </main>
-  );
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) router.replace("/garden");
+  }, [user, loading, router]);
+
+  if (loading) return null;
+  if (user) return null; // redirect in progress
+
+  return <AuthPage />;
 }

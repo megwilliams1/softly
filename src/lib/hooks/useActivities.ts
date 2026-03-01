@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { DayKey } from "./useMeals";
-
-const STORAGE_KEY = "softly:garden:activities";
 
 export type Activity = {
   id: string;
@@ -13,38 +20,31 @@ export type Activity = {
   label: string;
 };
 
-export function useActivities() {
+export function useActivities(uid: string | null) {
   const [activities, setActivities] = useState<Activity[]>([]);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setActivities(JSON.parse(stored));
-    } catch {}
-  }, []);
-
-  function addActivity(data: Omit<Activity, "id">) {
-    setActivities((prev) => {
-      const next = [...prev, { ...data, id: crypto.randomUUID() }];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
+    if (!uid) return;
+    const q = collection(db, "users", uid, "activities");
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setActivities(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Activity[]);
     });
+    return unsubscribe;
+  }, [uid]);
+
+  async function addActivity(data: Omit<Activity, "id">) {
+    if (!uid) return;
+    await addDoc(collection(db, "users", uid, "activities"), data);
   }
 
-  function updateActivity(id: string, updates: Partial<Omit<Activity, "id">>) {
-    setActivities((prev) => {
-      const next = prev.map((a) => (a.id === id ? { ...a, ...updates } : a));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
+  async function updateActivity(id: string, updates: Partial<Omit<Activity, "id">>) {
+    if (!uid) return;
+    await updateDoc(doc(db, "users", uid, "activities", id), updates);
   }
 
-  function deleteActivity(id: string) {
-    setActivities((prev) => {
-      const next = prev.filter((a) => a.id !== id);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
+  async function deleteActivity(id: string) {
+    if (!uid) return;
+    await deleteDoc(doc(db, "users", uid, "activities", id));
   }
 
   return { activities, addActivity, updateActivity, deleteActivity };

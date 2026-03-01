@@ -6,6 +6,10 @@ import {
   signInWithPopup,
   signOut as firebaseSignOut,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
   type User,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -32,15 +36,28 @@ export function useAuth() {
         "code" in err &&
         (err as { code: string }).code === "auth/popup-closed-by-user"
       ) {
-        return; // User closed the popup — not an error
+        return;
       }
-      throw err; // Re-throw anything unexpected
+      throw err;
     }
+  }
+
+  async function signUpWithEmail(displayName: string, email: string, password: string) {
+    const credential = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(credential.user, { displayName });
+  }
+
+  async function signInWithEmail(email: string, password: string) {
+    await signInWithEmailAndPassword(auth, email, password);
+  }
+
+  async function resetPassword(email: string) {
+    await sendPasswordResetEmail(auth, email);
   }
 
   async function signOut() {
     await firebaseSignOut(auth);
   }
 
-  return { user, loading, signIn, signOut };
+  return { user, loading, signIn, signUpWithEmail, signInWithEmail, resetPassword, signOut };
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "softly:garden:checklist";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export type ChecklistTab = "groceries" | "errands";
 
@@ -18,18 +18,22 @@ function emptyChecklist(): ChecklistData {
   return { groceries: [], errands: [] };
 }
 
-export function useChecklist() {
+export function useChecklist(uid: string | null) {
   const [data, setData] = useState<ChecklistData>(emptyChecklist);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setData(JSON.parse(stored));
-    } catch {}
-  }, []);
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "checklist", "current");
+    const unsubscribe = onSnapshot(ref, (snap) => {
+      if (snap.exists()) setData(snap.data() as ChecklistData);
+    });
+    return unsubscribe;
+  }, [uid]);
 
-  function persist(next: ChecklistData) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  async function persist(next: ChecklistData) {
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "checklist", "current");
+    await setDoc(ref, next);
     setData(next);
   }
 

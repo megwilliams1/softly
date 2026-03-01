@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "softly:sanctuary:mood";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export type MoodKey = "radiant" | "content" | "okay" | "low" | "drained";
 export type MoodHistory = Record<string, MoodKey>; // date (YYYY-MM-DD) → mood
@@ -11,21 +11,25 @@ function todayKey(): string {
   return new Date().toISOString().split("T")[0];
 }
 
-export function useMood() {
+export function useMood(uid: string | null) {
   const [history, setHistory] = useState<MoodHistory>({});
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setHistory(JSON.parse(stored));
-    } catch {}
-  }, []);
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "mood", "current");
+    const unsubscribe = onSnapshot(ref, (snap) => {
+      if (snap.exists()) setHistory(snap.data() as MoodHistory);
+    });
+    return unsubscribe;
+  }, [uid]);
 
   const todayMood = history[todayKey()] ?? null;
 
-  function setMood(mood: MoodKey) {
+  async function setMood(mood: MoodKey) {
+    if (!uid) return;
+    const ref = doc(db, "users", uid, "mood", "current");
     const next = { ...history, [todayKey()]: mood };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    await setDoc(ref, next);
     setHistory(next);
   }
 

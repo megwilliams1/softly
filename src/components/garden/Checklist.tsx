@@ -8,8 +8,8 @@ const TABS: { key: ChecklistTab; label: string }[] = [
   { key: "errands", label: "Errands" },
 ];
 
-export default function Checklist() {
-  const { data, addItem, toggleItem, clearCompleted } = useChecklist();
+export default function Checklist({ uid }: { uid: string | null }) {
+  const { data, addItem, toggleItem, clearCompleted } = useChecklist(uid);
   const [activeTab, setActiveTab] = useState<ChecklistTab>("groceries");
   const [input, setInput] = useState("");
   const [lastToggledId, setLastToggledId] = useState<string | null>(null);
