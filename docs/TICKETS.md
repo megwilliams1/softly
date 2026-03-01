@@ -358,3 +358,93 @@ As a user, I want to sign in to Softly so that my data is saved to the cloud and
 - [ ] All personal data (meals, activities, children, checklist, mood, gratitude, reminders, weekly reset) stored in Firestore per user
 - [ ] Data syncs across devices when signed in to same account
 - [ ] Firestore security rules protect all user data
+
+---
+
+## Phase 10 — Emotional Core
+
+---
+
+### TICKET-019 · Plant a Goal
+
+**Branch:** `feature/ticket-019-plant-a-goal`
+
+**User Story:**
+As a user, I want to plant a personal goal and watch it grow into a flower over time so that I feel motivated to show up consistently and have something beautiful to tend.
+
+**Background:**
+Each day the user checks in on their goal, the plant advances through a growth stage. The visual — from a tiny seed to a full bloom — mirrors their real effort. It lives in The Garden as its own card, small and intentional. It is not gamified. It is just honest.
+
+**Growth Stages (based on total check-in days):**
+- **0 days** — Seed (just planted, a small mound of soil)
+- **1–2 days** — Sprout (a tiny green curl pushing up)
+- **3–5 days** — Seedling (a stem with two small leaves)
+- **6–10 days** — Growing (fuller plant, reaching upward)
+- **11+ days** — Full Bloom (flowering, complete)
+
+**Acceptance Criteria:**
+- [ ] User can create a goal with a short intention (e.g. "drink more water", "walk daily")
+- [ ] One active goal at a time; completed goals are archived
+- [ ] A "Check in today" button appears once per day; after checking in, it shows a confirmation
+- [ ] Plant visual advances through 5 growth stages based on total check-in count
+- [ ] Plant is rendered as inline SVG or CSS-animated component (no external images)
+- [ ] Goal card lives in `/garden` below the meal grid
+- [ ] Completing a goal (user marks it done) triggers `animate-bloom-pop` celebration
+- [ ] Archived goals are viewable in a simple list ("past gardens")
+- [ ] Firestore path: `users/{uid}/goals/{id}` with fields: `text`, `startDate`, `checkIns` (string[] of date keys), `completed`, `createdAt`
+- [ ] New hook: `src/lib/hooks/useGoals.ts` — CRUD + check-in logic
+- [ ] New components:
+  - `src/components/garden/PlantStage.tsx` — SVG plant that accepts a `stage: 0–4` prop
+  - `src/components/garden/GoalCard.tsx` — full card: plant visual + goal text + check-in button
+  - `src/components/garden/PlantGoalModal.tsx` — modal to set/edit goal text
+- [ ] Uses existing design system CSS variables and modal pattern
+- [ ] Mobile responsive (375px+)
+- [ ] Dark mode compatible
+
+---
+
+### TICKET-020 · Mood + Weekly Garden Health Summary
+
+**Branch:** `feature/ticket-020-weekly-garden-summary`
+
+**User Story:**
+As a user, I want to receive a warm, personal summary of my week every Sunday so that I feel seen, validated, and emotionally grounded — not just organized.
+
+**Background:**
+This is the emotional glue of Softly. Not a dashboard. Not metrics. A letter from your garden back to you.
+
+The summary reads like this:
+
+> 🌿 This week your garden felt steady.
+> You showed up 4 days.
+> You logged 9 gratitudes.
+> You handled more than you realized.
+
+The language is procedurally generated from real data but always feels human. Different moods, different show-up counts, different gratitude counts produce different messages. The tone never judges. It always witnesses.
+
+**Presence Tracking:**
+To count "days shown up," write a lightweight presence doc to Firestore any time the user logs a mood, saves a gratitude, or checks in on a goal. Path: `users/{uid}/presences/{YYYY-MM-DD}`.
+
+**Summary Data Sources (past 7 days):**
+- Mood entries → dominant mood + consistency
+- Gratitude entries → total entries logged
+- Presence docs → days shown up count
+- Goal check-ins (if TICKET-019 is complete) → optional mention
+
+**Message Template System:**
+- `src/lib/utils/summaryMessages.ts` — pure functions that accept `{ daysShown, gratitudeCount, dominantMood }` and return a 3–4 line summary string
+- At minimum 4 message variants per "show-up tier" (0–1 days, 2–3 days, 4–5 days, 6–7 days)
+- Mood-aware: if dominant mood was "low" or "drained," the message is gentler and more validating; if "radiant," it celebrates
+
+**Acceptance Criteria:**
+- [ ] Presence doc written to Firestore on: mood save, gratitude save, goal check-in
+- [ ] New hook: `src/lib/hooks/useWeeklySummary.ts` — collects last 7 days of presence, mood, gratitude data and returns `{ daysShown, gratitudeCount, dominantMood, summaryText }`
+- [ ] `summaryMessages.ts` utility with tiered, mood-aware message templates (warm, plain-English, no emojis in the generated text itself — only the garden icon above)
+- [ ] New component: `src/components/sanctuary/WeeklyGardenSummary.tsx` — renders the summary card with a 🌿 icon, the generated message, and a soft closing line
+- [ ] Summary card appears in `/sanctuary` every day (past 7 days data is always valid)
+- [ ] On Sundays specifically, the summary is surfaced prominently — as the first card in `/sanctuary` above MoodCheckin
+- [ ] Summary card uses `animate-bloom-up` on entry
+- [ ] Summary card is not dismissible (it is always there as a reflection)
+- [ ] Uses existing design system CSS variables (`--color-cream`, `--color-bloom-pink`, `--font-display`)
+- [ ] Mobile responsive (375px+)
+- [ ] Dark mode compatible
