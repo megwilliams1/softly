@@ -448,3 +448,160 @@ To count "days shown up," write a lightweight presence doc to Firestore any time
 - [ ] Uses existing design system CSS variables (`--color-cream`, `--color-bloom-pink`, `--font-display`)
 - [ ] Mobile responsive (375px+)
 - [ ] Dark mode compatible
+
+---
+
+## Phase 11 — Documentation & Quality
+
+---
+
+### TICKET-021 · Wiki & QA Documentation
+
+**Branch:** `feature/ticket-021-wiki-and-qa`
+
+**User Story:**
+As a developer (and anyone who joins the project), I want a complete wiki and QA test case library so that I always know how the app works and how to verify it works correctly.
+
+**Acceptance Criteria:**
+- [ ] `docs/WIKI.md` created — covers project overview, stack, routes, Firestore data model, hook reference, design system, and dev workflow
+- [ ] `qa/` directory created at project root
+- [ ] `qa/README.md` — overview of QA process and test suite structure
+- [ ] `qa/auth.md` — test cases for sign-up, sign-in, Google auth, forgot password, sign-out, auth guards
+- [ ] `qa/garden.md` — test cases for Meal Planner, Activity Scheduler, Checklist, Plant a Goal
+- [ ] `qa/sanctuary.md` — test cases for Mood Check-in, Gratitude Journal, Daily Affirmation, Self-Care Reminders, Weekly Garden Summary
+- [ ] `qa/hearth.md` — test cases for browsing recipes, submitting (linked + written), recipe detail, delete, auth gate
+- [ ] `qa/reset.md` — test cases for Weekly Reset 5-step flow, completion state, repeat visit
+- [ ] `qa/navigation.md` — test cases for Navbar auth state, active links, Sunday prompt, dark mode toggle, mobile layout
+
+---
+
+## Phase 12 — Fixes & Enhancements
+
+---
+
+### TICKET-022 · Admin Panel
+
+**Branch:** `feature/ticket-022-admin-panel`
+
+**User Story:**
+As an admin, I want a protected admin panel where I can view all user accounts and clear a user's data if something goes wrong, so that I can maintain the health of the app without needing to go into the Firebase console for every issue.
+
+**Background:**
+Admin identity is stored in Firestore under `admins/{uid}`. When a user signs up, their profile is written to `users/{uid}/profile`. The admin panel reads from these profile docs. Actual Firebase Auth account deletion requires the Admin SDK — this panel handles data-level operations and links out to Firebase console for Auth-level actions.
+
+**Acceptance Criteria:**
+- [ ] `useAuth` writes a profile doc to `users/{uid}/profile` on sign-up (displayName, email, photoURL, createdAt)
+- [ ] Firestore `admins/{uid}` collection used to identify admins (manually seeded in Firebase console)
+- [ ] New hook `useIsAdmin(uid)` — checks if `admins/{uid}` doc exists, returns `isAdmin: boolean`
+- [ ] New route `/admin` — redirects to `/garden` if not signed in or not admin
+- [ ] Admin page shows a list of all user profiles (from `users/{uid}/profile` docs)
+- [ ] Each row shows: avatar, display name, email, joined date, and a "Clear data" button
+- [ ] "Clear data" deletes the user's personal Firestore subcollections but does NOT delete their Auth account
+- [ ] A confirmation dialog appears before any destructive action
+- [ ] A note on the page links to Firebase console for Auth account deletion
+- [ ] Navbar shows an "Admin" link only when `isAdmin` is true
+- [ ] Firestore security rules updated accordingly
+- [ ] Mobile responsive, dark mode compatible
+
+---
+
+### TICKET-023 · Email User Avatar + Display Name on Recipe Cards
+
+**Branch:** `feature/ticket-023-email-user-display`
+
+**User Story:**
+As a user who signed up with email, I want my name and an avatar to appear on recipes I share, just like Google sign-in users get their Google photo and name, so that my contributions feel personal and attributed correctly.
+
+**Background:**
+Google sign-in users automatically have `user.displayName` and `user.photoURL` populated. Email sign-up users have `user.displayName` set but `user.photoURL` is null. `RecipeCard` and `RecipeDetailModal` render `authorPhoto` directly as an `<img>` src — if that's null, the avatar breaks.
+
+**Acceptance Criteria:**
+- [ ] A shared `<UserAvatar>` component created at `src/components/shared/UserAvatar.tsx`
+  - Props: `photoURL: string | null`, `displayName: string | null`, `size?: number`
+  - If `photoURL` present: renders circular `<img>`
+  - If not: renders a circle with initials (first + last initial), `--color-sage` background, `--color-white` text
+- [ ] `RecipeCard` updated to use `<UserAvatar>` instead of a raw `<img>`
+- [ ] `RecipeDetailModal` updated to use `<UserAvatar>` for the author line
+- [ ] `<UserAvatar>` is reusable for Navbar (TICKET-025) and Account page (TICKET-024)
+- [ ] Existing Google sign-in recipe cards unaffected
+- [ ] Dark mode compatible
+
+---
+
+### TICKET-024 · Account / Profile Page
+
+**Branch:** `feature/ticket-024-account-page`
+
+**User Story:**
+As a user, I want an account page where I can see my profile info and update my display name and profile photo URL so that my identity feels personal across the app.
+
+**Acceptance Criteria:**
+- [ ] New protected route `/account` using `useRequireAuth`
+- [ ] Page shows current avatar (`<UserAvatar>`), display name, and email (read-only)
+- [ ] User can edit their display name (calls Firebase `updateProfile`)
+- [ ] User can enter a photo URL (calls Firebase `updateProfile` with `photoURL`)
+- [ ] Save button disabled until a change is made; shows "Saving..." while pending
+- [ ] Success confirmation: "Profile updated." shown for 3 seconds
+- [ ] "Change password" section sends reset email via `sendPasswordResetEmail`; hidden for Google sign-in users
+- [ ] Page updates `users/{uid}/profile` in Firestore to stay in sync
+- [ ] Uses `--color-cream` background, matches Sanctuary palette
+- [ ] Mobile responsive, dark mode compatible
+
+---
+
+### TICKET-025 · Show Signed-In User in Navbar
+
+**Branch:** `feature/ticket-025-nav-user`
+
+**User Story:**
+As a signed-in user, I want to see my avatar and name in the navigation bar so that I always know whose account I'm in and can quickly access my profile.
+
+**Acceptance Criteria:**
+- [ ] When signed in, Navbar shows `<UserAvatar>` at the right end of the nav bar
+- [ ] Display name shown beside the avatar (truncated if long) — hidden on very small screens
+- [ ] Clicking the avatar or name navigates to `/account`
+- [ ] Initials fallback works for email users with no photo (uses `<UserAvatar>`)
+- [ ] Signed-out state unchanged
+- [ ] Does not crowd existing nav links on mobile
+- [ ] Dark mode compatible
+
+---
+
+### TICKET-026 · Edit Child
+
+**Branch:** `feature/ticket-026-edit-child`
+
+**User Story:**
+As a user, I want to edit a child's name or color after adding them so that I can fix mistakes without deleting and re-adding them (which would lose all their activities).
+
+**Background:**
+`useChildren` currently only has `addChild` and `removeChild`. There is no `updateChild`. Child pills in `ActivityScheduler` have no edit affordance.
+
+**Acceptance Criteria:**
+- [ ] `useChildren` gains `updateChild(id, updates: Partial<{name, color}>)` that calls `updateDoc`
+- [ ] Each child pill in `ActivityScheduler` shows a small Lucide `Pencil` icon (12px) on hover
+- [ ] Clicking the pencil opens an edit modal pre-filled with current name and color
+- [ ] Edit modal has "Save changes" button and a "Remove child" button
+- [ ] Taken colors exclude all children except the one being edited
+- [ ] Existing activities for a removed child are orphaned (not deleted) — acceptable for now
+- [ ] Mobile responsive, dark mode compatible
+
+---
+
+### TICKET-027 · "Another One" → Styled CTA Button
+
+**Branch:** `feature/ticket-027-affirmation-cta`
+
+**User Story:**
+As a user reading my daily affirmation, I want the option to see another affirmation to be clearly presented as a real button so that I notice it and feel invited to use it.
+
+**Background:**
+In `DailyAffirmation.tsx`, the button that cycles affirmations renders as unstyled lowercase text `"another one"`. It is invisible to most users.
+
+**Acceptance Criteria:**
+- [ ] `"another one"` button replaced with a styled pill button reading `"Show me another"`
+- [ ] Style: outlined pill, `border: 1.5px solid var(--color-sage)`, transparent background, `--color-moss` text, `--radius-full`
+- [ ] Hover: subtle sage fill (`rgba(168, 184, 154, 0.15)`)
+- [ ] `animate-bloom-pop` on click (brief scale pulse via class toggle with timeout)
+- [ ] Existing cycling behavior unchanged
+- [ ] Dark mode compatible
