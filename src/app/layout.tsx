@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import SeasonalBackground from "@/components/shared/SeasonalBackground";
+import InAppBrowserGate from "@/components/shared/InAppBrowserGate";
 import { getSeason } from "@/lib/utils/season";
 import "./globals.css";
 
@@ -30,11 +31,13 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <SeasonalBackground />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <Navbar />
-          {children}
-        </div>
+        <InAppBrowserGate>
+          <SeasonalBackground />
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <Navbar />
+            {children}
+          </div>
+        </InAppBrowserGate>
       </body>
     </html>
   );
