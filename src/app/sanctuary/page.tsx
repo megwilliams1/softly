@@ -19,8 +19,9 @@ export default function SanctuaryPage() {
       className="min-h-screen px-6 py-10"
       style={{ backgroundColor: "var(--color-cream)" }}
     >
+      {/* Header — left aligned */}
       <h1 className="text-4xl mb-1">The Sanctuary</h1>
-      <p style={{ color: "var(--color-stone)", marginBottom: "32px" }}>
+      <p style={{ color: "var(--color-stone)", marginBottom: "48px" }}>
         Your personal space lives here.
       </p>
 
@@ -31,37 +32,41 @@ export default function SanctuaryPage() {
         </section>
       )}
 
-      <section style={{ marginBottom: "48px" }}>
+      {/* Affirmation — centered */}
+      <section className="flex justify-center" style={{ marginBottom: "48px" }}>
         <DailyAffirmation />
       </section>
 
-      <section style={{ marginBottom: "48px" }}>
-        <h2 className="text-2xl mb-2">How are you feeling?</h2>
-        <MoodCheckin uid={uid} />
-      </section>
-
-      <section style={{ marginBottom: "48px" }}>
-        <h2 className="text-2xl mb-1">Gratitude</h2>
-        <p style={{ color: "var(--color-stone)", fontSize: "0.9rem", marginBottom: "20px" }}>
-          Three things, however small.
-        </p>
-        <GratitudeJournal uid={uid} />
-      </section>
-
-      {/* Every other day, the summary lives here — after gratitude */}
-      {!isSunday && (
-        <section style={{ marginBottom: "48px" }}>
-          <WeeklyGardenSummary uid={uid} />
+      {/* Mood, Gratitude, Self-Care — side by side */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <section>
+          <h2 className="text-2xl mb-2">How are you feeling?</h2>
+          <MoodCheckin uid={uid} />
         </section>
-      )}
 
-      <section>
-        <h2 className="text-2xl mb-1">Self-Care Reminders</h2>
-        <p style={{ color: "var(--color-stone)", fontSize: "0.9rem", marginBottom: "20px" }}>
-          Little nudges, just for you.
-        </p>
-        <SelfCareReminders uid={uid} />
-      </section>
+        <section>
+          <h2 className="text-2xl mb-1">Gratitude</h2>
+          <p style={{ color: "var(--color-stone)", fontSize: "0.9rem", marginBottom: "20px" }}>
+            Three things, however small.
+          </p>
+          <GratitudeJournal uid={uid} />
+        </section>
+
+        <section>
+          <h2 className="text-2xl mb-1">Self-Care Reminders</h2>
+          <p style={{ color: "var(--color-stone)", fontSize: "0.9rem", marginBottom: "20px" }}>
+            Little nudges, just for you.
+          </p>
+          <SelfCareReminders uid={uid} />
+        </section>
+
+        {/* On non-Sundays, the weekly summary tucks in at the end of the grid */}
+        {!isSunday && (
+          <section>
+            <WeeklyGardenSummary uid={uid} />
+          </section>
+        )}
+      </div>
     </main>
   );
 }
