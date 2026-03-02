@@ -12,7 +12,15 @@ function getDayIndex(): number {
 
 export default function DailyAffirmation() {
   const [offset, setOffset] = useState(0);
+  const [popping, setPopping] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const index = (getDayIndex() + offset) % affirmations.length;
+
+  function handleNext() {
+    setOffset((o) => o + 1);
+    setPopping(true);
+    setTimeout(() => setPopping(false), 300);
+  }
 
   return (
     <div
@@ -48,19 +56,24 @@ export default function DailyAffirmation() {
       </div>
 
       <button
-        onClick={() => setOffset((o) => o + 1)}
+        onClick={handleNext}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className={popping ? "animate-bloom-pop" : ""}
         style={{
-          marginTop: "20px",
-          fontSize: "0.75rem",
-          color: "var(--color-pebble)",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
+          marginTop: "24px",
+          padding: "9px 22px",
+          borderRadius: "var(--radius-full)",
+          border: "1.5px solid var(--color-sage)",
+          backgroundColor: hovered ? "rgba(168, 184, 154, 0.15)" : "transparent",
+          color: "var(--color-moss)",
           fontFamily: "var(--font-body)",
-          letterSpacing: "0.04em",
+          fontSize: "0.85rem",
+          cursor: "pointer",
+          transition: "background-color 0.2s ease",
         }}
       >
-        another one
+        Show me another
       </button>
     </div>
   );
