@@ -50,14 +50,21 @@ export function useRecipes() {
       orderBy("createdAt", "desc")
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Recipe[];
-      setRecipes(data);
-      setLoading(false);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Recipe[];
+        setRecipes(data);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Recipes listener error:", err);
+        setLoading(false);
+      }
+    );
 
     return unsubscribe;
   }, []);
