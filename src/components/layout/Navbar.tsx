@@ -38,7 +38,7 @@ export default function Navbar() {
         boxShadow: "var(--shadow-soft)",
       }}
     >
-      <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="px-6 py-4 flex items-center justify-between">
         {/* App name */}
         <Link
           href={user ? "/garden" : "/"}
