@@ -72,6 +72,15 @@ export function useAuth() {
     }, { merge: true }).catch(() => {});
   }
 
+  async function updateUserProfile(newDisplayName: string, newPhotoURL: string | null) {
+    if (!auth.currentUser) return;
+    await updateProfile(auth.currentUser, { displayName: newDisplayName, photoURL: newPhotoURL });
+    setDoc(doc(db, "users", auth.currentUser.uid), {
+      displayName: newDisplayName,
+      photoURL: newPhotoURL,
+    }, { merge: true }).catch(() => {});
+  }
+
   async function resetPassword(email: string) {
     await sendPasswordResetEmail(auth, email);
   }
@@ -80,5 +89,5 @@ export function useAuth() {
     await firebaseSignOut(auth);
   }
 
-  return { user, loading, signIn, signUpWithEmail, signInWithEmail, resetPassword, signOut };
+  return { user, loading, signIn, signUpWithEmail, signInWithEmail, updateUserProfile, resetPassword, signOut };
 }
