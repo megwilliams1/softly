@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { Pencil } from "lucide-react";
 import { DayKey } from "@/lib/hooks/useMeals";
-import { useChildren } from "@/lib/hooks/useChildren";
+import { useChildren, type Child } from "@/lib/hooks/useChildren";
 import { useActivities, Activity } from "@/lib/hooks/useActivities";
 import { useTheme } from "@/lib/hooks/useTheme";
 import ActivityModal from "./ActivityModal";
 import AddChildModal from "./AddChildModal";
+import EditChildModal from "./EditChildModal";
 
 const DAYS: { key: DayKey; label: string }[] = [
   { key: "mon", label: "Mon" },
@@ -21,7 +23,7 @@ const DAYS: { key: DayKey; label: string }[] = [
 type ActivityModalState = { day: DayKey; activity?: Activity } | null;
 
 export default function ActivityScheduler({ uid }: { uid: string | null }) {
-  const { children, addChild } = useChildren(uid);
+  const { children, addChild, updateChild, removeChild } = useChildren(uid);
   const { activities, addActivity, updateActivity, deleteActivity } = useActivities(uid);
   const { theme } = useTheme();
 
@@ -33,6 +35,8 @@ export default function ActivityScheduler({ uid }: { uid: string | null }) {
 
   const [activityModal, setActivityModal] = useState<ActivityModalState>(null);
   const [showAddChild, setShowAddChild] = useState(false);
+  const [editingChild, setEditingChild] = useState<Child | null>(null);
+  const [hoveredChildId, setHoveredChildId] = useState<string | null>(null);
 
   const takenColors = children.map((c) => c.color);
 
@@ -51,16 +55,19 @@ export default function ActivityScheduler({ uid }: { uid: string | null }) {
         {children.map((child) => (
           <div
             key={child.id}
+            onMouseEnter={() => setHoveredChildId(child.id)}
+            onMouseLeave={() => setHoveredChildId(null)}
             style={{
               display: "flex",
               alignItems: "center",
               gap: "6px",
-              padding: "6px 12px 6px 6px",
+              padding: "6px 10px 6px 6px",
               borderRadius: "var(--radius-full)",
               background: childBg(child.color),
               fontSize: "0.85rem",
               fontFamily: "var(--font-body)",
               color: "var(--color-soil)",
+              position: "relative",
             }}
           >
             <span
@@ -79,6 +86,28 @@ export default function ActivityScheduler({ uid }: { uid: string | null }) {
               {child.name[0].toUpperCase()}
             </span>
             {child.name}
+            {hoveredChildId === child.id && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setEditingChild(child); }}
+                aria-label={`Edit ${child.name}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "rgba(255,255,255,0.6)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "20px",
+                  height: "20px",
+                  cursor: "pointer",
+                  padding: 0,
+                  marginLeft: "2px",
+                  color: "var(--color-soil)",
+                }}
+              >
+                <Pencil size={11} />
+              </button>
+            )}
           </div>
         ))}
 
@@ -243,6 +272,23 @@ export default function ActivityScheduler({ uid }: { uid: string | null }) {
             setShowAddChild(false);
           }}
           onClose={() => setShowAddChild(false)}
+        />
+      )}
+
+      {/* Edit child modal */}
+      {editingChild && (
+        <EditChildModal
+          child={editingChild}
+          takenColors={takenColors}
+          onSave={(updates) => {
+            updateChild(editingChild.id, updates);
+            setEditingChild(null);
+          }}
+          onRemove={() => {
+            removeChild(editingChild.id);
+            setEditingChild(null);
+          }}
+          onClose={() => setEditingChild(null)}
         />
       )}
     </>

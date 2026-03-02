@@ -7,6 +7,7 @@ import {
   addDoc,
   doc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -44,10 +45,15 @@ export function useChildren(uid: string | null) {
     await addDoc(collection(db, "users", uid, "children"), { name, color });
   }
 
+  async function updateChild(id: string, updates: Partial<{ name: string; color: string }>) {
+    if (!uid) return;
+    await updateDoc(doc(db, "users", uid, "children", id), updates);
+  }
+
   async function removeChild(id: string) {
     if (!uid) return;
     await deleteDoc(doc(db, "users", uid, "children", id));
   }
 
-  return { children, addChild, removeChild };
+  return { children, addChild, updateChild, removeChild };
 }
