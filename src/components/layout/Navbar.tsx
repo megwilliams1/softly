@@ -6,6 +6,7 @@ import { Sprout, Sparkles, Flame, Sun, Moon, LogOut, ShieldCheck } from "lucide-
 import { useTheme } from "@/lib/hooks/useTheme";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useIsAdmin } from "@/lib/hooks/useIsAdmin";
+import UserAvatar from "@/components/shared/UserAvatar";
 
 const links = [
   { href: "/garden",    label: "The Garden",    icon: Sprout   },
@@ -118,6 +119,34 @@ export default function Navbar() {
                   <span className="hidden sm:inline">Admin</span>
                 </Link>
               )}
+
+              {/* User avatar → /account */}
+              <Link
+                href="/account"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  textDecoration: "none",
+                  marginLeft: "4px",
+                }}
+              >
+                <UserAvatar photoURL={user.photoURL} displayName={user.displayName} size={28} />
+                <span
+                  className="hidden sm:inline"
+                  style={{
+                    fontSize: "0.85rem",
+                    fontFamily: "var(--font-body)",
+                    color: "var(--color-stone)",
+                    maxWidth: "100px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {user.displayName ?? user.email}
+                </span>
+              </Link>
 
               {/* Sign out */}
               <button
