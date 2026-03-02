@@ -32,7 +32,22 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  const canSubmit = title.trim() !== "" && (mode === "original" || recipeUrl.trim() !== "");
+  function isValidUrl(url: string): boolean {
+    try {
+      const u = new URL(url);
+      return u.protocol === "http:" || u.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }
+
+  const recipeUrlInvalid = mode === "linked" && recipeUrl.trim() !== "" && !isValidUrl(recipeUrl.trim());
+  const imageUrlInvalid = imageUrl.trim() !== "" && !isValidUrl(imageUrl.trim());
+
+  const canSubmit =
+    title.trim() !== "" &&
+    !imageUrlInvalid &&
+    (mode === "original" || (recipeUrl.trim() !== "" && !recipeUrlInvalid));
 
   async function handleSubmit() {
     if (!canSubmit) return;
@@ -198,6 +213,11 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
                 placeholder="https://..."
                 style={inputStyle}
               />
+              {recipeUrlInvalid && (
+                <p style={{ marginTop: "4px", fontSize: "0.78rem", color: "var(--color-error)", fontFamily: "var(--font-body)" }}>
+                  Please enter a valid URL starting with https://
+                </p>
+              )}
             </div>
           )}
 
@@ -209,6 +229,11 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
               placeholder="https://..."
               style={inputStyle}
             />
+            {imageUrlInvalid && (
+              <p style={{ marginTop: "4px", fontSize: "0.78rem", color: "var(--color-error)", fontFamily: "var(--font-body)" }}>
+                Please enter a valid URL starting with https://
+              </p>
+            )}
           </div>
 
           {mode === "original" && (
