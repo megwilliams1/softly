@@ -57,6 +57,20 @@ export default function RecipeCard({ recipe, animDelay = 0, onClick }: Props) {
       )}
 
       <div style={{ padding: "16px" }}>
+        {recipe.category && recipe.category !== "other" && (
+          <span style={{
+            display: "inline-block",
+            fontSize: "0.68rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+            fontWeight: 600,
+            color: "var(--color-moss)",
+            fontFamily: "var(--font-body)",
+            marginBottom: "6px",
+          }}>
+            {recipe.category}
+          </span>
+        )}
         <h3
           style={{
             fontFamily: "var(--font-display)",

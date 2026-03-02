@@ -4,6 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/hooks/useAuth";
 
+function isInAppBrowser(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|Snapchat/i.test(ua);
+}
+
 type Mode = "signin" | "signup";
 
 function getErrorMessage(code: string): string {
@@ -114,6 +120,8 @@ export default function AuthPage() {
     }
   }
 
+  const inAppBrowser = isInAppBrowser();
+
   return (
     <div
       style={{
@@ -125,6 +133,26 @@ export default function AuthPage() {
         padding: "24px",
       }}
     >
+      {inAppBrowser && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "var(--color-butter)",
+            color: "var(--color-soil)",
+            fontFamily: "var(--font-body)",
+            fontSize: "0.88rem",
+            textAlign: "center",
+            padding: "12px 20px",
+            zIndex: 100,
+            lineHeight: 1.5,
+          }}
+        >
+          For the best experience, open Softly in Safari or Chrome. Google sign-in doesn't work inside Messenger or Instagram.
+        </div>
+      )}
       <div
         style={{
           width: "100%",

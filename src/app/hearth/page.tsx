@@ -3,16 +3,31 @@
 import { useState } from "react";
 import { Flame } from "lucide-react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
-import { useRecipes, type Recipe } from "@/lib/hooks/useRecipes";
+import { useRecipes, type Recipe, type RecipeCategory } from "@/lib/hooks/useRecipes";
 import RecipeCard from "@/components/hearth/RecipeCard";
 import SubmitRecipeModal from "@/components/hearth/SubmitRecipeModal";
 import RecipeDetailModal from "@/components/hearth/RecipeDetailModal";
+
+const FILTER_OPTIONS: { value: RecipeCategory | "all"; label: string }[] = [
+  { value: "all",       label: "All"       },
+  { value: "breakfast", label: "Breakfast" },
+  { value: "lunch",     label: "Lunch"     },
+  { value: "dinner",    label: "Dinner"    },
+  { value: "dessert",   label: "Dessert"   },
+  { value: "snack",     label: "Snack"     },
+  { value: "other",     label: "Other"     },
+];
 
 export default function HearthPage() {
   const { user, loading } = useRequireAuth();
   const { recipes, loading: recipesLoading, submitRecipe, deleteRecipe } = useRecipes();
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [activeFilter, setActiveFilter] = useState<RecipeCategory | "all">("all");
+
+  const filteredRecipes = activeFilter === "all"
+    ? recipes
+    : recipes.filter((r) => (r.category ?? "other") === activeFilter);
 
   if (loading || !user) return null;
 
@@ -73,13 +88,39 @@ export default function HearthPage() {
         </div>
       </div>
 
+      {/* Category filter pills */}
+      <div style={{ maxWidth: "960px", margin: "0 auto", padding: "24px 24px 0" }}>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          {FILTER_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setActiveFilter(opt.value)}
+              style={{
+                padding: "7px 16px",
+                borderRadius: "var(--radius-full)",
+                border: `1.5px solid ${activeFilter === opt.value ? "var(--color-butter)" : "rgba(176, 168, 154, 0.4)"}`,
+                backgroundColor: activeFilter === opt.value ? "var(--color-butter)" : "transparent",
+                color: activeFilter === opt.value ? "var(--color-soil)" : "var(--color-stone)",
+                fontFamily: "var(--font-body)",
+                fontSize: "0.85rem",
+                fontWeight: activeFilter === opt.value ? 500 : 400,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Recipe grid */}
-      <div style={{ maxWidth: "960px", margin: "0 auto", padding: "32px 24px 60px" }}>
+      <div style={{ maxWidth: "960px", margin: "0 auto", padding: "24px 24px 60px" }}>
         {recipesLoading ? (
           <p style={{ fontFamily: "var(--font-body)", color: "var(--color-stone)", fontSize: "0.95rem" }}>
             Loading recipes...
           </p>
-        ) : recipes.length === 0 ? (
+        ) : filteredRecipes.length === 0 ? (
           <div
             style={{
               textAlign: "center",
@@ -104,7 +145,7 @@ export default function HearthPage() {
               gap: "20px",
             }}
           >
-            {recipes.map((recipe, i) => (
+            {filteredRecipes.map((recipe, i) => (
               <RecipeCard
                 key={recipe.id}
                 recipe={recipe}

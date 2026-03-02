@@ -3,7 +3,16 @@
 import { useState, useEffect } from "react";
 import { Link2, PenLine, X } from "lucide-react";
 import { type User } from "firebase/auth";
-import { type RecipeInput } from "@/lib/hooks/useRecipes";
+import { type RecipeInput, type RecipeCategory } from "@/lib/hooks/useRecipes";
+
+const CATEGORIES: { value: RecipeCategory; label: string }[] = [
+  { value: "breakfast", label: "Breakfast" },
+  { value: "lunch",     label: "Lunch"     },
+  { value: "dinner",    label: "Dinner"    },
+  { value: "dessert",   label: "Dessert"   },
+  { value: "snack",     label: "Snack"     },
+  { value: "other",     label: "Other"     },
+];
 
 interface Props {
   user: User;
@@ -13,6 +22,7 @@ interface Props {
 
 export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Props) {
   const [mode, setMode] = useState<"linked" | "original">("linked");
+  const [category, setCategory] = useState<RecipeCategory>("other");
   const [title, setTitle] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [recipeUrl, setRecipeUrl] = useState("");
@@ -58,12 +68,14 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
         mode === "linked"
           ? {
               type: "linked",
+              category,
               title: title.trim(),
               recipeUrl: recipeUrl.trim(),
               imageUrl: imageUrl.trim() || undefined,
             }
           : {
               type: "original",
+              category,
               title: title.trim(),
               imageUrl: imageUrl.trim() || undefined,
               ingredients: ingredientsText.split("\n").map((s) => s.trim()).filter(Boolean),
@@ -202,6 +214,32 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
               placeholder="e.g. Grandma's Chicken Soup"
               style={inputStyle}
             />
+          </div>
+
+          <div>
+            <label style={labelStyle}>Category</label>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  type="button"
+                  onClick={() => setCategory(cat.value)}
+                  style={{
+                    padding: "6px 14px",
+                    borderRadius: "var(--radius-full)",
+                    border: `1.5px solid ${category === cat.value ? "var(--color-butter)" : "rgba(176, 168, 154, 0.4)"}`,
+                    backgroundColor: category === cat.value ? "var(--color-butter)" : "transparent",
+                    color: category === cat.value ? "var(--color-soil)" : "var(--color-stone)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.85rem",
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {mode === "linked" && (

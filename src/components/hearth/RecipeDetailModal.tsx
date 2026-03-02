@@ -122,6 +122,22 @@ export default function RecipeDetailModal({ recipe, currentUser, onDelete, onClo
             {recipe.title}
           </h2>
 
+          {/* Category chip */}
+          {recipe.category && recipe.category !== "other" && (
+            <span style={{
+              display: "inline-block",
+              fontSize: "0.72rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              fontWeight: 600,
+              color: "var(--color-moss)",
+              fontFamily: "var(--font-body)",
+              marginBottom: "12px",
+            }}>
+              {recipe.category}
+            </span>
+          )}
+
           {/* Timing chips */}
           {recipe.type === "original" && (recipe.prepTime || recipe.cookTime || recipe.servings) && (
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "20px" }}>
