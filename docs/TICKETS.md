@@ -605,3 +605,25 @@ In `DailyAffirmation.tsx`, the button that cycles affirmations renders as unstyl
 - [ ] `animate-bloom-pop` on click (brief scale pulse via class toggle with timeout)
 - [ ] Existing cycling behavior unchanged
 - [ ] Dark mode compatible
+
+---
+
+### TICKET-029 · Recipe Categories
+
+**Branch:** `feature/ticket-029-recipe-categories`
+
+**User Story:**
+As a user, I want to assign a category to a recipe when I submit it and filter the recipe grid by category so that I can quickly find the kind of meal I'm looking for.
+
+**Categories:** Breakfast, Lunch, Dinner, Dessert, Snack, Other
+
+**Acceptance Criteria:**
+- [ ] `Recipe` type gains an optional `category` field: `"breakfast" | "lunch" | "dinner" | "dessert" | "snack" | "other"`
+- [ ] `SubmitRecipeModal` includes a category picker (pill buttons, single-select, defaults to `"other"`)
+- [ ] Category is saved to Firestore on submit
+- [ ] Recipe grid on `/hearth` shows category filter pills above the grid (All, Breakfast, Lunch, Dinner, Dessert, Snack, Other)
+- [ ] Selecting a filter pill filters the visible recipes client-side
+- [ ] "All" is selected by default and shows all recipes
+- [ ] Each `RecipeCard` shows a small category label
+- [ ] Existing recipes without a category are treated as "Other"
+- [ ] Mobile responsive, dark mode compatible
