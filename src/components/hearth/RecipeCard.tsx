@@ -2,6 +2,7 @@
 
 import { ExternalLink } from "lucide-react";
 import { type Recipe } from "@/lib/hooks/useRecipes";
+import UserAvatar from "@/components/shared/UserAvatar";
 
 interface Props {
   recipe: Recipe;
@@ -71,15 +72,7 @@ export default function RecipeCard({ recipe, animDelay = 0, onClick }: Props) {
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            {recipe.authorPhoto && (
-              <img
-                src={recipe.authorPhoto}
-                alt={recipe.authorName}
-                width={20}
-                height={20}
-                style={{ borderRadius: "50%", objectFit: "cover" }}
-              />
-            )}
+            <UserAvatar photoURL={recipe.authorPhoto} displayName={recipe.authorName} size={20} />
             <span style={{ fontSize: "0.78rem", color: "var(--color-stone)" }}>
               {recipe.authorName}
             </span>

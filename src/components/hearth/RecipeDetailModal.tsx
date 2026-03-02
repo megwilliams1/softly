@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { ExternalLink, Trash2, X } from "lucide-react";
 import { type Recipe } from "@/lib/hooks/useRecipes";
 import { type User } from "firebase/auth";
+import UserAvatar from "@/components/shared/UserAvatar";
 
 interface Props {
   recipe: Recipe;
@@ -101,15 +102,7 @@ export default function RecipeDetailModal({ recipe, currentUser, onDelete, onClo
         <div style={{ padding: "24px" }}>
           {/* Author */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-            {recipe.authorPhoto && (
-              <img
-                src={recipe.authorPhoto}
-                alt={recipe.authorName}
-                width={24}
-                height={24}
-                style={{ borderRadius: "50%", objectFit: "cover" }}
-              />
-            )}
+            <UserAvatar photoURL={recipe.authorPhoto} displayName={recipe.authorName} size={24} />
             <span style={{ fontSize: "0.8rem", color: "var(--color-stone)", fontFamily: "var(--font-body)" }}>
               {recipe.authorName} shared a recipe
             </span>
