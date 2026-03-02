@@ -23,6 +23,18 @@ export function useAuth() {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
+      // Backfill profile doc for users who signed up before Firestore writes were added
+      if (firebaseUser) {
+        setDoc(
+          doc(db, "users", firebaseUser.uid),
+          {
+            displayName: firebaseUser.displayName,
+            email: firebaseUser.email,
+            photoURL: firebaseUser.photoURL ?? null,
+          },
+          { merge: true }
+        ).catch(() => {});
+      }
     });
     return unsubscribe;
   }, []);
