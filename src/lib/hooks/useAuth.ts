@@ -12,7 +12,8 @@ import {
   updateProfile,
   type User,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -29,7 +30,14 @@ export function useAuth() {
   async function signIn() {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const { user } = result;
+      // Upsert profile — non-blocking, never prevents redirect
+      setDoc(
+        doc(db, "users", user.uid),
+        { displayName: user.displayName, email: user.email, photoURL: user.photoURL },
+        { merge: true }
+      ).catch(() => {});
     } catch (err: unknown) {
       if (
         err instanceof Error &&
@@ -45,10 +53,32 @@ export function useAuth() {
   async function signUpWithEmail(displayName: string, email: string, password: string) {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(credential.user, { displayName });
+    // Non-blocking — profile write failure never prevents sign-up redirect
+    setDoc(doc(db, "users", credential.user.uid), {
+      displayName,
+      email: credential.user.email,
+      photoURL: null,
+      createdAt: serverTimestamp(),
+    }).catch(() => {});
   }
 
   async function signInWithEmail(email: string, password: string) {
-    await signInWithEmailAndPassword(auth, email, password);
+    const credential = await signInWithEmailAndPassword(auth, email, password);
+    const { user } = credential;
+    setDoc(doc(db, "users", user.uid), {
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+    }, { merge: true }).catch(() => {});
+  }
+
+  async function updateUserProfile(newDisplayName: string, newPhotoURL: string | null) {
+    if (!auth.currentUser) return;
+    await updateProfile(auth.currentUser, { displayName: newDisplayName, photoURL: newPhotoURL });
+    setDoc(doc(db, "users", auth.currentUser.uid), {
+      displayName: newDisplayName,
+      photoURL: newPhotoURL,
+    }, { merge: true }).catch(() => {});
   }
 
   async function resetPassword(email: string) {
@@ -59,5 +89,5 @@ export function useAuth() {
     await firebaseSignOut(auth);
   }
 
-  return { user, loading, signIn, signUpWithEmail, signInWithEmail, resetPassword, signOut };
+  return { user, loading, signIn, signUpWithEmail, signInWithEmail, updateUserProfile, resetPassword, signOut };
 }

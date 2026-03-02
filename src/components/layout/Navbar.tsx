@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Sprout, Sparkles, Flame, Sun, Moon, LogOut } from "lucide-react";
+import { Sprout, Sparkles, Flame, Sun, Moon, LogOut, ShieldCheck } from "lucide-react";
 import { useTheme } from "@/lib/hooks/useTheme";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { useIsAdmin } from "@/lib/hooks/useIsAdmin";
+import UserAvatar from "@/components/shared/UserAvatar";
 
 const links = [
   { href: "/garden",    label: "The Garden",    icon: Sprout   },
@@ -21,6 +23,7 @@ export default function Navbar() {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const { user, loading, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin(user?.uid ?? null);
 
   async function handleSignOut() {
     await signOut();
@@ -35,7 +38,7 @@ export default function Navbar() {
         boxShadow: "var(--shadow-soft)",
       }}
     >
-      <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="px-6 py-4 flex items-center justify-between">
         {/* App name */}
         <Link
           href={user ? "/garden" : "/"}
@@ -95,6 +98,55 @@ export default function Navbar() {
                   </Link>
                 );
               })}
+
+              {/* Admin link — only for admins */}
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200"
+                  style={{
+                    fontSize: "0.9rem",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: pathname.startsWith("/admin") ? 500 : 400,
+                    color: pathname.startsWith("/admin") ? "var(--color-soil)" : "var(--color-stone)",
+                    backgroundColor: pathname.startsWith("/admin")
+                      ? "var(--color-seasonal-primary)"
+                      : "transparent",
+                    textDecoration: "none",
+                  }}
+                >
+                  <ShieldCheck size={16} />
+                  <span className="hidden sm:inline">Admin</span>
+                </Link>
+              )}
+
+              {/* User avatar → /account */}
+              <Link
+                href="/account"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  textDecoration: "none",
+                  marginLeft: "4px",
+                }}
+              >
+                <UserAvatar photoURL={user.photoURL} displayName={user.displayName} size={28} />
+                <span
+                  className="hidden sm:inline"
+                  style={{
+                    fontSize: "0.85rem",
+                    fontFamily: "var(--font-body)",
+                    color: "var(--color-stone)",
+                    maxWidth: "100px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {user.displayName ?? user.email}
+                </span>
+              </Link>
 
               {/* Sign out */}
               <button
