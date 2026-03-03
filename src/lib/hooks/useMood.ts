@@ -19,6 +19,8 @@ export function useMood(uid: string | null) {
     const ref = doc(db, "users", uid, "mood", "current");
     const unsubscribe = onSnapshot(ref, (snap) => {
       if (snap.exists()) setHistory(snap.data() as MoodHistory);
+    }, (err) => {
+      console.error("Mood listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

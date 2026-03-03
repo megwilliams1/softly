@@ -11,6 +11,19 @@ const firebaseConfig = {
   appId:             process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+// Surface missing config early — secrets may not be set in Firebase App Hosting
+if (typeof window !== "undefined") {
+  const missing = Object.entries(firebaseConfig)
+    .filter(([, v]) => !v)
+    .map(([k]) => k);
+  if (missing.length > 0) {
+    console.error(
+      `[Softly] Firebase config missing: ${missing.join(", ")}. ` +
+      "Check that your NEXT_PUBLIC_* secrets are set in Firebase App Hosting (apphosting.yaml)."
+    );
+  }
+}
+
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db   = getFirestore(app);

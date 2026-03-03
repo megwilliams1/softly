@@ -43,6 +43,8 @@ export function useGoals(uid: string | null) {
     const q = collection(db, "users", uid, "goals");
     const unsubscribe = onSnapshot(q, (snap) => {
       setGoals(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Goal[]);
+    }, (err) => {
+      console.error("Goals listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

@@ -53,6 +53,8 @@ export function useWeeklySummary(uid: string | null) {
     if (!uid) return;
     return onSnapshot(doc(db, "users", uid, "mood", "current"), (snap) => {
       if (snap.exists()) setMoodHistory(snap.data() as MoodHistory);
+    }, (err) => {
+      console.error("Weekly summary mood listener error:", err);
     });
   }, [uid]);
 
@@ -60,6 +62,8 @@ export function useWeeklySummary(uid: string | null) {
     if (!uid) return;
     return onSnapshot(doc(db, "users", uid, "gratitude", "current"), (snap) => {
       if (snap.exists()) setGratitudeHistory(snap.data() as GratitudeHistory);
+    }, (err) => {
+      console.error("Weekly summary gratitude listener error:", err);
     });
   }, [uid]);
 
@@ -67,6 +71,8 @@ export function useWeeklySummary(uid: string | null) {
     if (!uid) return;
     return onSnapshot(collection(db, "users", uid, "goals"), (snap) => {
       setGoals(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Goal[]);
+    }, (err) => {
+      console.error("Weekly summary goals listener error:", err);
     });
   }, [uid]);
 
