@@ -57,7 +57,7 @@ export default function MealGrid({ uid }: { uid: string | null }) {
               <MealSlot
                 key={`${key}-${time}`}
                 time={time}
-                value={meals[key][time]}
+                value={meals[key]?.[time] ?? ""}
                 animDelay={dayIndex * 0.05 + timeIndex * 0.12}
                 onClick={() => setModal({ day: key, time })}
               />
@@ -70,7 +70,7 @@ export default function MealGrid({ uid }: { uid: string | null }) {
         <MealModal
           day={modal.day}
           time={modal.time}
-          initialValue={meals[modal.day][modal.time]}
+          initialValue={meals[modal.day]?.[modal.time] ?? ""}
           onSave={(value) => {
             setMeal(modal.day, modal.time, value);
             setModal(null);

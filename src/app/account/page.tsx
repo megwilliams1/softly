@@ -4,22 +4,24 @@ import { useState, useEffect } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useAuth } from "@/lib/hooks/useAuth";
 import UserAvatar from "@/components/shared/UserAvatar";
+import ImagePicker from "@/components/shared/ImagePicker";
+import { uploadImage, ImageUploadError } from "@/lib/utils/storage";
 
 export default function AccountPage() {
   const { user, loading } = useRequireAuth();
   const { updateUserProfile, resetPassword } = useAuth();
 
   const [displayName, setDisplayName] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [passwordSent, setPasswordSent] = useState(false);
   const [sendingReset, setSendingReset] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
       setDisplayName(user.displayName ?? "");
-      setPhotoURL(user.photoURL ?? "");
     }
   }, [user]);
 
@@ -29,14 +31,32 @@ export default function AccountPage() {
   const isGoogleUser = currentUser.providerData.some((p) => p.providerId === "google.com");
   const isDirty =
     displayName.trim() !== (currentUser.displayName ?? "") ||
-    (photoURL.trim() || null) !== (currentUser.photoURL ?? null);
+    selectedFile !== null;
 
   async function handleSave() {
     setSaving(true);
-    await updateUserProfile(displayName.trim(), photoURL.trim() || null);
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setUploadError(null);
+    try {
+      let finalPhotoURL: string | null = currentUser.photoURL ?? null;
+
+      if (selectedFile) {
+        const path = `users/${currentUser.uid}/profile`;
+        finalPhotoURL = await uploadImage(selectedFile, path);
+      }
+
+      await updateUserProfile(displayName.trim(), finalPhotoURL);
+      setSelectedFile(null);
+      setSaving(false);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setSaving(false);
+      if (err instanceof ImageUploadError) {
+        setUploadError(err.message);
+      } else {
+        setUploadError("Failed to update profile. Please try again.");
+      }
+    }
   }
 
   async function handlePasswordReset() {
@@ -93,10 +113,28 @@ export default function AccountPage() {
         {/* Avatar preview */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "32px" }}>
           <UserAvatar
-            photoURL={photoURL.trim() || null}
+            photoURL={currentUser.photoURL ?? null}
             displayName={displayName || null}
             size={80}
           />
+        </div>
+
+        {/* Profile photo upload */}
+        <div style={{ marginBottom: "20px" }}>
+          <ImagePicker
+            currentImageUrl={currentUser.photoURL ?? undefined}
+            onFileSelect={(file) => {
+              setSelectedFile(file);
+              setUploadError(null);
+            }}
+            label="Profile photo"
+            disabled={saving}
+          />
+          {uploadError && (
+            <p style={{ fontSize: "0.78rem", color: "var(--color-error)", marginTop: "4px", fontFamily: "var(--font-body)" }}>
+              {uploadError}
+            </p>
+          )}
         </div>
 
         {/* Display name */}
@@ -109,21 +147,6 @@ export default function AccountPage() {
             placeholder="Your name"
             style={inputStyle}
           />
-        </div>
-
-        {/* Photo URL */}
-        <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Photo URL</label>
-          <input
-            type="url"
-            value={photoURL}
-            onChange={(e) => setPhotoURL(e.target.value)}
-            placeholder="https://..."
-            style={inputStyle}
-          />
-          <p style={{ fontSize: "0.75rem", color: "var(--color-pebble)", marginTop: "4px", fontFamily: "var(--font-body)" }}>
-            Paste a link to an image. Leave blank to use your initials.
-          </p>
         </div>
 
         {/* Email (read-only) */}
