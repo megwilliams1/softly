@@ -30,6 +30,8 @@ export function useReminders(uid: string | null) {
     const q = collection(db, "users", uid, "reminders");
     const unsubscribe = onSnapshot(q, (snap) => {
       setReminders(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Reminder[]);
+    }, (err) => {
+      console.error("Reminders listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

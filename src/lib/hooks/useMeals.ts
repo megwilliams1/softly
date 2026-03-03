@@ -30,6 +30,8 @@ export function useMeals(uid: string | null) {
       if (snap.exists()) {
         setMealsState((prev) => ({ ...emptyMeals(), ...prev, ...(snap.data() as MealsData) }));
       }
+    }, (err) => {
+      console.error("Meals listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

@@ -26,6 +26,8 @@ export function useChecklist(uid: string | null) {
     const ref = doc(db, "users", uid, "checklist", "current");
     const unsubscribe = onSnapshot(ref, (snap) => {
       if (snap.exists()) setData(snap.data() as ChecklistData);
+    }, (err) => {
+      console.error("Checklist listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

@@ -25,6 +25,8 @@ export function useGratitude(uid: string | null) {
     const ref = doc(db, "users", uid, "gratitude", "current");
     const unsubscribe = onSnapshot(ref, (snap) => {
       if (snap.exists()) setHistory(snap.data() as GratitudeHistory);
+    }, (err) => {
+      console.error("Gratitude listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

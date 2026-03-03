@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import {
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -20,6 +21,21 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Complete any pending Google sign-in redirect
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          setDoc(
+            doc(db, "users", result.user.uid),
+            { displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL },
+            { merge: true }
+          ).catch(() => {});
+        }
+      })
+      .catch((err) => {
+        console.error("Google redirect sign-in error:", err);
+      });
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
@@ -41,25 +57,9 @@ export function useAuth() {
 
   async function signIn() {
     const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const { user } = result;
-      // Upsert profile — non-blocking, never prevents redirect
-      setDoc(
-        doc(db, "users", user.uid),
-        { displayName: user.displayName, email: user.email, photoURL: user.photoURL },
-        { merge: true }
-      ).catch(() => {});
-    } catch (err: unknown) {
-      if (
-        err instanceof Error &&
-        "code" in err &&
-        (err as { code: string }).code === "auth/popup-closed-by-user"
-      ) {
-        return;
-      }
-      throw err;
-    }
+    // signInWithRedirect navigates the page to Google, then back.
+    // Profile upsert happens in the getRedirectResult handler above.
+    await signInWithRedirect(auth, provider);
   }
 
   async function signUpWithEmail(displayName: string, email: string, password: string) {
