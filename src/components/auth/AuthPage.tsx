@@ -68,12 +68,13 @@ export default function AuthPage() {
     setLoading(true);
     try {
       await signIn();
-      // Page navigates away for Google sign-in redirect.
-      // When the user returns, onAuthStateChanged detects the session
-      // and the home page redirects to /garden automatically.
+      router.replace("/garden");
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? "";
+      if (code === "auth/popup-closed-by-user") return;
+      console.error("Google sign-in error:", code, err);
       setError(getErrorMessage(code));
+    } finally {
       setLoading(false);
     }
   }
