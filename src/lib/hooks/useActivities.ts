@@ -28,6 +28,8 @@ export function useActivities(uid: string | null) {
     const q = collection(db, "users", uid, "activities");
     const unsubscribe = onSnapshot(q, (snap) => {
       setActivities(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Activity[]);
+    }, (err) => {
+      console.error("Activities listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

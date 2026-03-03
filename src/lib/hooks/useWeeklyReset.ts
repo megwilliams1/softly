@@ -32,6 +32,8 @@ export function useWeeklyReset(uid: string | null) {
     const q = collection(db, "users", uid, "weeklyResets");
     const unsubscribe = onSnapshot(q, (snap) => {
       setHistory(snap.docs.map((d) => d.data() as ResetEntry));
+    }, (err) => {
+      console.error("Weekly reset listener error:", err);
     });
     return unsubscribe;
   }, [uid]);

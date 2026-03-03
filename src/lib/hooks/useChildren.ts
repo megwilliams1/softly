@@ -36,6 +36,8 @@ export function useChildren(uid: string | null) {
     const q = collection(db, "users", uid, "children");
     const unsubscribe = onSnapshot(q, (snap) => {
       setChildren(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Child[]);
+    }, (err) => {
+      console.error("Children listener error:", err);
     });
     return unsubscribe;
   }, [uid]);
