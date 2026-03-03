@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Link2, PenLine, X } from "lucide-react";
 import { type User } from "firebase/auth";
 import { type RecipeInput, type RecipeCategory } from "@/lib/hooks/useRecipes";
+import ImagePicker from "@/components/shared/ImagePicker";
+import { uploadImage, ImageUploadError } from "@/lib/utils/storage";
 
 const CATEGORIES: { value: RecipeCategory; label: string }[] = [
   { value: "breakfast", label: "Breakfast" },
@@ -24,7 +26,6 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
   const [mode, setMode] = useState<"linked" | "original">("linked");
   const [category, setCategory] = useState<RecipeCategory>("other");
   const [title, setTitle] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [recipeUrl, setRecipeUrl] = useState("");
   const [ingredientsText, setIngredientsText] = useState("");
   const [instructionsText, setInstructionsText] = useState("");
@@ -33,6 +34,11 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
   const [servings, setServings] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Image state
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [ogImageUrl, setOgImageUrl] = useState<string | null>(null);
+  const [fetchingOg, setFetchingOg] = useState(false);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -51,12 +57,26 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
     }
   }
 
+  async function fetchOgImage(url: string) {
+    if (!isValidUrl(url)) return;
+    setFetchingOg(true);
+    try {
+      const res = await fetch(`/api/og-preview?url=${encodeURIComponent(url)}`);
+      const data = await res.json();
+      if (data.ogImage) {
+        setOgImageUrl(data.ogImage);
+      }
+    } catch {
+      // Non-fatal — just don't auto-fill
+    } finally {
+      setFetchingOg(false);
+    }
+  }
+
   const recipeUrlInvalid = mode === "linked" && recipeUrl.trim() !== "" && !isValidUrl(recipeUrl.trim());
-  const imageUrlInvalid = imageUrl.trim() !== "" && !isValidUrl(imageUrl.trim());
 
   const canSubmit =
     title.trim() !== "" &&
-    !imageUrlInvalid &&
     (mode === "original" || (recipeUrl.trim() !== "" && !recipeUrlInvalid));
 
   async function handleSubmit() {
@@ -64,6 +84,15 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
     setSubmitting(true);
     setError(null);
     try {
+      let finalImageUrl: string | undefined;
+
+      if (selectedFile) {
+        const path = `recipes/${_user.uid}/${Date.now()}`;
+        finalImageUrl = await uploadImage(selectedFile, path);
+      } else if (ogImageUrl) {
+        finalImageUrl = ogImageUrl;
+      }
+
       const input: RecipeInput =
         mode === "linked"
           ? {
@@ -71,13 +100,13 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
               category,
               title: title.trim(),
               recipeUrl: recipeUrl.trim(),
-              imageUrl: imageUrl.trim() || undefined,
+              imageUrl: finalImageUrl,
             }
           : {
               type: "original",
               category,
               title: title.trim(),
-              imageUrl: imageUrl.trim() || undefined,
+              imageUrl: finalImageUrl,
               ingredients: ingredientsText.split("\n").map((s) => s.trim()).filter(Boolean),
               instructions: instructionsText.split("\n").map((s) => s.trim()).filter(Boolean),
               prepTime: prepTime.trim() || undefined,
@@ -86,8 +115,12 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
             };
       await onSubmit(input);
       onClose();
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      if (err instanceof ImageUploadError) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
       setSubmitting(false);
     }
   }
@@ -181,7 +214,10 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
           {(["linked", "original"] as const).map((m) => (
             <button
               key={m}
-              onClick={() => setMode(m)}
+              onClick={() => {
+                setMode(m);
+                if (m === "original") setOgImageUrl(null);
+              }}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -248,6 +284,9 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
               <input
                 value={recipeUrl}
                 onChange={(e) => setRecipeUrl(e.target.value)}
+                onBlur={() => {
+                  if (recipeUrl.trim() && !ogImageUrl) fetchOgImage(recipeUrl.trim());
+                }}
                 placeholder="https://..."
                 style={inputStyle}
               />
@@ -256,23 +295,20 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
                   Please enter a valid URL starting with https://
                 </p>
               )}
+              {fetchingOg && (
+                <p style={{ marginTop: "4px", fontSize: "0.78rem", color: "var(--color-stone)", fontFamily: "var(--font-body)" }}>
+                  Fetching preview...
+                </p>
+              )}
             </div>
           )}
 
-          <div>
-            <label style={labelStyle}>Image URL <span style={{ fontWeight: 400 }}>(optional)</span></label>
-            <input
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://..."
-              style={inputStyle}
-            />
-            {imageUrlInvalid && (
-              <p style={{ marginTop: "4px", fontSize: "0.78rem", color: "var(--color-error)", fontFamily: "var(--font-body)" }}>
-                Please enter a valid URL starting with https://
-              </p>
-            )}
-          </div>
+          <ImagePicker
+            currentImageUrl={ogImageUrl ?? undefined}
+            onFileSelect={(file) => setSelectedFile(file)}
+            label="Recipe image"
+            disabled={submitting}
+          />
 
           {mode === "original" && (
             <>
