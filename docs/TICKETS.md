@@ -608,6 +608,24 @@ In `DailyAffirmation.tsx`, the button that cycles affirmations renders as unstyl
 
 ---
 
+### TICKET-030 · Migrate Deployment to Firebase App Hosting
+
+**Branch:** `feature/ticket-030-firebase-app-hosting`
+
+**User Story:**
+As a developer, I want to move the frontend deployment from Vercel to Firebase App Hosting so that everything — auth, database, and hosting — lives in one place.
+
+**Acceptance Criteria:**
+- [ ] `apphosting.yaml` created at project root with runtime and env var config
+- [ ] Firebase App Hosting backend created and connected to GitHub `main` branch
+- [ ] All `NEXT_PUBLIC_FIREBASE_*` environment variables set as Firebase secrets
+- [ ] First deployment succeeds with no build errors
+- [ ] Firebase App Hosting domain added to Firebase Auth authorized domains
+- [ ] App fully functional on Firebase domain (sign-in, data, all pages)
+- [ ] Vercel deployment disconnected once Firebase is confirmed working
+
+---
+
 ### TICKET-029 · Recipe Categories
 
 **Branch:** `feature/ticket-029-recipe-categories`
