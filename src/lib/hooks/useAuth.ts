@@ -21,6 +21,8 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let redirectDone = false;
+
     // Complete any pending Google sign-in redirect
     getRedirectResult(auth)
       .then((result) => {
@@ -34,11 +36,22 @@ export function useAuth() {
       })
       .catch((err) => {
         console.error("Google redirect sign-in error:", err);
+      })
+      .finally(() => {
+        redirectDone = true;
+        // If onAuthStateChanged already fired with null while we were
+        // waiting for the redirect check, we can now safely stop loading.
+        setLoading(false);
       });
 
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
-      setLoading(false);
+      // Only stop loading if we have a user (cached session) OR the
+      // redirect check is done. This prevents the flash of the login
+      // page when returning from Google sign-in.
+      if (firebaseUser || redirectDone) {
+        setLoading(false);
+      }
       // Backfill profile doc for users who signed up before Firestore writes were added
       if (firebaseUser) {
         setDoc(
