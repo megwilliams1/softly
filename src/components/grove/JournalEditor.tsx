@@ -61,6 +61,9 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
           borderRadius: "var(--radius-lg)",
           padding: "28px",
           boxShadow: "var(--shadow-card)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
         }}
       >
         <p
@@ -70,7 +73,6 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
             letterSpacing: "0.07em",
             color: "var(--color-sage)",
             fontWeight: 600,
-            marginBottom: "12px",
           }}
         >
           Today&rsquo;s entry
@@ -81,37 +83,45 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
               fontSize: "0.85rem",
               color: "var(--color-stone)",
               fontStyle: "italic",
-              marginBottom: "10px",
             }}
           >
             &ldquo;{todayEntry.promptUsed}&rdquo;
           </p>
         )}
-        <p
+        <div
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "1rem",
-            color: "var(--color-soil)",
-            lineHeight: 1.7,
-            whiteSpace: "pre-wrap",
+            borderLeft: "3px solid var(--color-sage)",
+            paddingLeft: "16px",
           }}
         >
-          {todayEntry.text}
-        </p>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "1rem",
+              color: "var(--color-soil)",
+              lineHeight: 1.7,
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {todayEntry.text}
+          </p>
+        </div>
         <button
           onClick={() => setIsEditing(true)}
           style={{
             marginTop: "16px",
-            fontSize: "0.85rem",
+            alignSelf: "flex-start",
+            fontSize: "0.8rem",
             color: "var(--color-moss)",
             background: "none",
-            border: "none",
+            border: "1px solid rgba(92, 107, 80, 0.3)",
+            borderRadius: "var(--radius-full)",
             cursor: "pointer",
             fontFamily: "var(--font-body)",
-            padding: 0,
+            padding: "5px 14px",
           }}
         >
-          Edit
+          Edit entry
         </button>
       </div>
     );
@@ -161,6 +171,7 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
         <div
           style={{
             backgroundColor: "rgba(168,184,154,0.1)",
+            borderLeft: "3px solid var(--color-sage)",
             borderRadius: "var(--radius-md)",
             padding: "14px 16px",
             display: "flex",

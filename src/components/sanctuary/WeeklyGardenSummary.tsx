@@ -18,6 +18,7 @@ export default function WeeklyGardenSummary({ uid, prominent = false }: Props) {
         backgroundColor: "var(--color-white)",
         borderRadius: "var(--radius-lg)",
         boxShadow: "var(--shadow-card)",
+        borderLeft: "4px solid var(--color-sage)",
         padding: prominent ? "36px 28px" : "28px 24px",
         display: "flex",
         flexDirection: "column",
@@ -33,13 +34,15 @@ export default function WeeklyGardenSummary({ uid, prominent = false }: Props) {
             fontSize: "0.65rem",
             textTransform: "uppercase",
             letterSpacing: "0.07em",
-            color: "var(--color-sage)",
+            color: "var(--color-moss)",
             fontWeight: 600,
           }}
         >
           {isSunday ? "Your week in the garden" : "This week so far"}
         </p>
       </div>
+
+      <div style={{ height: "1px", backgroundColor: "rgba(168, 184, 154, 0.2)" }} />
 
       {/* The letter */}
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>

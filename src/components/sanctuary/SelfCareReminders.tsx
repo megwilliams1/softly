@@ -7,6 +7,7 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
   const { reminders, addReminder, toggleDone, deleteReminder } = useReminders(uid);
   const [text, setText] = useState("");
   const [emoji, setEmoji] = useState("");
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const today = todayKey();
 
@@ -40,19 +41,23 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
               <div
                 key={reminder.id}
                 className="animate-bloom-up"
+                onMouseEnter={() => setHoveredCard(reminder.id)}
+                onMouseLeave={() => setHoveredCard(null)}
                 style={{
                   animationDelay: `${i * 0.07}s`,
                   animationFillMode: "both",
                   backgroundColor: "var(--color-white)",
                   borderRadius: "var(--radius-lg)",
-                  boxShadow: "var(--shadow-soft)",
+                  boxShadow: hoveredCard === reminder.id && !isDone ? "var(--shadow-lift)" : "var(--shadow-soft)",
                   padding: "18px 14px 14px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   gap: "8px",
                   opacity: isDone ? 0.5 : 1,
-                  transition: "opacity 0.3s ease",
+                  transform: hoveredCard === reminder.id && !isDone ? "translateY(-2px)" : "none",
+                  transition: "opacity 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease",
+                  cursor: "default",
                 }}
               >
                 {/* Emoji */}
