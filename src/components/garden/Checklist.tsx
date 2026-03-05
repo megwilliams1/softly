@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useChecklist, ChecklistTab } from "@/lib/hooks/useChecklist";
 
 const TABS: { key: ChecklistTab; label: string }[] = [
-  { key: "groceries", label: "Groceries" },
+  { key: "groceries", label: "Shopping" },
   { key: "errands", label: "Errands" },
 ];
 
@@ -157,7 +157,7 @@ export default function Checklist({ uid }: { uid: string | null }) {
       <div style={{ display: "flex", gap: "8px", marginBottom: checked.length > 0 ? "12px" : "0" }}>
         <input
           type="text"
-          placeholder={activeTab === "groceries" ? "Add a grocery item..." : "Add an errand..."}
+          placeholder={activeTab === "groceries" ? "Add a shopping item..." : "Add an errand..."}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}

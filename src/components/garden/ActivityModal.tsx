@@ -34,15 +34,15 @@ export default function ActivityModal({
   onDelete,
   onClose,
 }: Props) {
-  const [childId, setChildId] = useState(
-    activity?.childId ?? children[0]?.id ?? ""
+  const [childIds, setChildIds] = useState<string[]>(
+    activity?.childIds ?? (children[0] ? [children[0].id] : [])
   );
   const [day, setDay] = useState<DayKey>(activity?.day ?? initialDay);
   const [time, setTime] = useState(activity?.time ?? "");
   const [label, setLabel] = useState(activity?.label ?? "");
 
   const isEditing = !!activity;
-  const canSave = label.trim().length > 0 && childId !== "";
+  const canSave = label.trim().length > 0 && childIds.length > 0;
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -51,6 +51,12 @@ export default function ActivityModal({
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
+
+  function toggleChild(id: string) {
+    setChildIds((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  }
 
   const inputStyle = {
     width: "100%",
@@ -120,18 +126,18 @@ export default function ActivityModal({
           </h2>
         </div>
 
-        {/* Child selector */}
+        {/* Child selector — multi-select */}
         <div>
           <p style={{ fontSize: "0.7rem", color: "var(--color-stone)", marginBottom: "8px" }}>
-            For
+            For (select one or more)
           </p>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {children.map((child) => {
-              const selected = childId === child.id;
+              const selected = childIds.includes(child.id);
               return (
                 <button
                   key={child.id}
-                  onClick={() => setChildId(child.id)}
+                  onClick={() => toggleChild(child.id)}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -208,7 +214,7 @@ export default function ActivityModal({
           onChange={(e) => setLabel(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && canSave)
-              onSave({ childId, day, time, label: label.trim() });
+              onSave({ childIds, day, time, label: label.trim() });
           }}
           style={inputStyle}
         />
@@ -226,7 +232,7 @@ export default function ActivityModal({
         <div style={{ display: "flex", gap: "10px" }}>
           <button
             onClick={() => {
-              if (canSave) onSave({ childId, day, time, label: label.trim() });
+              if (canSave) onSave({ childIds, day, time, label: label.trim() });
             }}
             disabled={!canSave}
             style={{

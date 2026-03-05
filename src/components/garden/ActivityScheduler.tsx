@@ -171,8 +171,11 @@ export default function ActivityScheduler({ uid }: { uid: string | null }) {
 
                   {/* Activity pills */}
                   {dayActivities.map((activity) => {
-                    const child = children.find((c) => c.id === activity.childId);
-                    if (!child) return null;
+                    const activityChildren = activity.childIds
+                      .map((cid) => children.find((c) => c.id === cid))
+                      .filter(Boolean) as import("@/lib/hooks/useChildren").Child[];
+                    if (activityChildren.length === 0) return null;
+                    const primaryChild = activityChildren[0];
                     return (
                       <button
                         key={activity.id}
@@ -182,7 +185,7 @@ export default function ActivityScheduler({ uid }: { uid: string | null }) {
                           textAlign: "left",
                           padding: "8px 10px",
                           borderRadius: "var(--radius-sm)",
-                          background: childBg(child.color),
+                          background: childBg(primaryChild.color),
                           border: "none",
                           cursor: "pointer",
                           width: "100%",
@@ -207,6 +210,23 @@ export default function ActivityScheduler({ uid }: { uid: string | null }) {
                             }}
                           >
                             {activity.time}
+                          </div>
+                        )}
+                        {activityChildren.length > 1 && (
+                          <div style={{ display: "flex", gap: "4px", marginTop: "5px" }}>
+                            {activityChildren.map((ch) => (
+                              <span
+                                key={ch.id}
+                                style={{
+                                  width: "8px",
+                                  height: "8px",
+                                  borderRadius: "50%",
+                                  backgroundColor: ch.color,
+                                  display: "inline-block",
+                                  border: "1px solid rgba(255,255,255,0.6)",
+                                }}
+                              />
+                            ))}
                           </div>
                         )}
                       </button>
