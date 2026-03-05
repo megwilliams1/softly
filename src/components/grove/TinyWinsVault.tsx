@@ -145,7 +145,10 @@ export default function TinyWinsVault({ uid }: Props) {
                 borderRadius: "var(--radius-md)",
                 padding: "10px 14px",
                 border: "1px solid rgba(168,184,154,0.2)",
+                borderLeft: "3px solid var(--color-sage)",
                 position: "relative",
+                transition: "box-shadow 0.15s ease",
+                boxShadow: hoveredId === win.id ? "var(--shadow-soft)" : "none",
               }}
             >
               <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>{win.emoji}</span>
@@ -170,23 +173,24 @@ export default function TinyWinsVault({ uid }: Props) {
               >
                 {formatDate(win.createdAt)}
               </span>
-              {hoveredId === win.id && (
-                <button
-                  onClick={() => deleteWin(win.id)}
-                  title="Remove"
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "0.75rem",
-                    color: "var(--color-pebble)",
-                    padding: "0 2px",
-                    fontFamily: "var(--font-body)",
-                  }}
-                >
-                  ✕
-                </button>
-              )}
+              <button
+                onClick={() => deleteWin(win.id)}
+                title="Remove"
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "0.75rem",
+                  color: "var(--color-pebble)",
+                  padding: "0 2px",
+                  fontFamily: "var(--font-body)",
+                  opacity: hoveredId === win.id ? 1 : 0.25,
+                  transition: "opacity 0.15s ease",
+                  flexShrink: 0,
+                }}
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>

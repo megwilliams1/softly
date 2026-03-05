@@ -25,34 +25,74 @@ export default function DailyAffirmation() {
   return (
     <div
       style={{
+        backgroundColor: "var(--color-white)",
+        borderRadius: "var(--radius-lg)",
+        boxShadow: "var(--shadow-card)",
+        border: "1px solid rgba(168, 184, 154, 0.15)",
+        padding: "48px 40px 36px",
         textAlign: "center",
-        padding: "32px 24px",
         maxWidth: "600px",
-        margin: "0 auto",
+        width: "100%",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Decorative quote mark */}
+      <span
+        aria-hidden="true"
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: "8rem",
+          lineHeight: 0.7,
+          color: "var(--color-bloom-pink)",
+          opacity: 0.25,
+          position: "absolute",
+          top: "20px",
+          left: "24px",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+      >
+        &ldquo;
+      </span>
+
       <div
         key={index}
         className="animate-petal-drift"
-        style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}
+        style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}
       >
-        <span style={{ fontSize: "1.6rem" }}>🌸</span>
+        <span
+          style={{
+            fontSize: "0.7rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+            color: "var(--color-moss)",
+            fontFamily: "var(--font-body)",
+            fontWeight: 600,
+          }}
+        >
+          ✨ Today&rsquo;s Affirmation
+        </span>
 
         <p
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(1.4rem, 3vw, 1.9rem)",
+            fontSize: "clamp(1.5rem, 3.5vw, 2rem)",
             fontWeight: 400,
             fontStyle: "italic",
             color: "var(--color-soil)",
-            lineHeight: 1.5,
+            lineHeight: 1.6,
             margin: 0,
+            position: "relative",
+            zIndex: 1,
           }}
         >
           {affirmations[index]}
         </p>
 
-        <span style={{ fontSize: "1.2rem", opacity: 0.6 }}>✦</span>
+        <span style={{ fontSize: "0.9rem", opacity: 0.65, color: "var(--color-bloom-pink)", letterSpacing: "0.4em" }}>
+          ✦ ✦ ✦
+        </span>
       </div>
 
       <button
@@ -61,8 +101,8 @@ export default function DailyAffirmation() {
         onMouseLeave={() => setHovered(false)}
         className={popping ? "animate-bloom-pop" : ""}
         style={{
-          marginTop: "24px",
-          padding: "9px 22px",
+          marginTop: "28px",
+          padding: "9px 24px",
           borderRadius: "var(--radius-full)",
           border: "1.5px solid var(--color-sage)",
           backgroundColor: hovered ? "rgba(168, 184, 154, 0.15)" : "transparent",
@@ -70,7 +110,6 @@ export default function DailyAffirmation() {
           fontFamily: "var(--font-body)",
           fontSize: "0.85rem",
           cursor: "pointer",
-          transition: "background-color 0.2s ease",
         }}
       >
         Show me another

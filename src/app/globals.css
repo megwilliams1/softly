@@ -137,6 +137,21 @@ a:focus-visible {
 
 input:focus-visible,
 textarea:focus-visible {
-  box-shadow: 0 0 0 2px var(--color-sage) !important;
+  box-shadow: 0 0 0 2.5px rgba(168, 184, 154, 0.5) !important;
   border-color: var(--color-sage) !important;
+  outline: none !important;
+}
+
+/* ─── Interactive States ──────────────────────────────── */
+button:disabled {
+  cursor: not-allowed;
+}
+
+button {
+  transition: opacity 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+input,
+textarea {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }

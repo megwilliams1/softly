@@ -5,6 +5,7 @@ import MealGrid from "@/components/garden/MealGrid";
 import ActivityScheduler from "@/components/garden/ActivityScheduler";
 import Checklist from "@/components/garden/Checklist";
 import GoalCard from "@/components/garden/GoalCard";
+import DueNotesBanner from "@/components/grove/DueNotesBanner";
 
 export default function GardenPage() {
   const { user, loading } = useRequireAuth();
@@ -22,6 +23,8 @@ export default function GardenPage() {
         Family planning lives here.
       </p>
 
+      <DueNotesBanner uid={uid} />
+
       <section style={{ marginBottom: "48px" }}>
         <h2 className="text-2xl mb-6">Meal Planner</h2>
         <MealGrid uid={uid} />
@@ -33,7 +36,7 @@ export default function GardenPage() {
       </section>
 
       <section style={{ marginBottom: "48px" }}>
-        <h2 className="text-2xl mb-6">Groceries & Errands</h2>
+        <h2 className="text-2xl mb-6">Shopping List</h2>
         <Checklist uid={uid} />
       </section>
 

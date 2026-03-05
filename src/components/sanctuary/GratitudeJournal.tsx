@@ -134,7 +134,16 @@ export default function GratitudeJournal({ uid }: { uid: string | null }) {
 
             {/* Read-only entries */}
             {(todayEntry ?? values).map((entry, i) => (
-              <div key={i} style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
+                  borderLeft: "3px solid var(--color-bloom-pink)",
+                  paddingLeft: "12px",
+                }}
+              >
                 <span
                   style={{
                     fontSize: "0.7rem",
@@ -165,12 +174,14 @@ export default function GratitudeJournal({ uid }: { uid: string | null }) {
               style={{
                 alignSelf: "flex-start",
                 fontSize: "0.8rem",
-                color: "var(--color-pebble)",
+                color: "var(--color-moss)",
                 background: "none",
-                border: "none",
+                border: "1px solid rgba(92, 107, 80, 0.3)",
+                borderRadius: "var(--radius-full)",
                 cursor: "pointer",
-                padding: 0,
+                padding: "5px 14px",
                 fontFamily: "var(--font-body)",
+                marginTop: "4px",
               }}
             >
               Edit today's entries
@@ -183,9 +194,9 @@ export default function GratitudeJournal({ uid }: { uid: string | null }) {
       {yesterdayEntry && (
         <div
           style={{
-            backgroundColor: "transparent",
+            backgroundColor: "rgba(250, 246, 240, 0.7)",
             borderRadius: "var(--radius-lg)",
-            border: "1px solid rgba(176, 168, 154, 0.3)",
+            border: "1px solid rgba(176, 168, 154, 0.25)",
             padding: "20px 24px",
             display: "flex",
             flexDirection: "column",
