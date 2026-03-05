@@ -48,6 +48,7 @@ export function useWeeklySummary(uid: string | null) {
   const [moodHistory, setMoodHistory] = useState<MoodHistory>({});
   const [gratitudeHistory, setGratitudeHistory] = useState<GratitudeHistory>({});
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [journalData, setJournalData] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
     if (!uid) return;
@@ -76,6 +77,15 @@ export function useWeeklySummary(uid: string | null) {
     });
   }, [uid]);
 
+  useEffect(() => {
+    if (!uid) return;
+    return onSnapshot(doc(db, "users", uid, "journal", "entries"), (snap) => {
+      if (snap.exists()) setJournalData(snap.data() as Record<string, unknown>);
+    }, (err) => {
+      console.error("Weekly summary journal listener error:", err);
+    });
+  }, [uid]);
+
   const last7 = getLast7Keys();
   const goalCheckInDates = new Set(goals.flatMap((g) => g.checkIns));
 
@@ -85,7 +95,8 @@ export function useWeeklySummary(uid: string | null) {
       moodHistory[key] != null ||
       (gratitudeHistory[key] != null &&
         gratitudeHistory[key].some((s) => s.trim().length > 0)) ||
-      goalCheckInDates.has(key)
+      goalCheckInDates.has(key) ||
+      journalData[key] != null
   ).length;
 
   const gratitudeCount = countGratitudes(gratitudeHistory, last7);

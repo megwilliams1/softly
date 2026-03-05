@@ -270,3 +270,62 @@
 3. Click "Plant it"
 
 **Expected:** Goal text updates. Check-in count and plant stage are unchanged.
+
+
+---
+
+## Feature: Multi-Kid Activities (TICKET-031 / multi-kid update)
+
+### TC-GARDEN-030 · ActivityModal shows multi-select child buttons
+**Steps:**
+1. Add at least 2 children in the Activity Scheduler.
+2. Click "+" to open the activity modal.
+
+**Expected:** All children are shown as pill buttons in the "For" section. Multiple can be toggled — clicking one selects it (filled background), clicking again deselects it.
+
+---
+
+### TC-GARDEN-031 · Save button disabled until at least one child is selected
+**Steps:** Open the activity modal, deselect all children (click the pre-selected one to remove it).
+
+**Expected:** The Save button becomes semi-transparent and non-interactive. Filling in an activity name alone is not enough.
+
+---
+
+### TC-GARDEN-032 · Activity with 1 child shows solid color card
+**Steps:** Add an activity assigned to exactly one child.
+
+**Expected:** The activity pill on the calendar uses that child's color as the solid background. No dot row is shown.
+
+---
+
+### TC-GARDEN-033 · Activity with 2+ children shows colored dot row
+**Steps:** Add an activity assigned to 2 or more children.
+
+**Expected:**
+- The activity pill background uses the first child's color
+- A row of small colored dots (one per child) appears below the label
+- Each dot matches the respective child's color
+
+---
+
+### TC-GARDEN-034 · Old single-child activities (migration) still display correctly
+**Steps:** If any activities were saved before the multi-kid update (with a `childId` string field), navigate to the garden.
+
+**Expected:** Those activities still display with the correct child's color. The migration logic (reading old `childId` and converting to `[childId]`) handles this transparently.
+
+---
+
+## Feature: Shopping List (renamed from Groceries)
+
+### TC-GARDEN-035 · Shopping tab label is "Shopping"
+**Steps:** Navigate to `/garden`, scroll to the Shopping List section.
+
+**Expected:** The first tab reads "Shopping" (not "Groceries"). The second tab still reads "Errands". Firestore key is still `"groceries"` (no data migration needed).
+
+---
+
+### TC-GARDEN-036 · Shopping tab placeholder text
+**Steps:** Click the "Shopping" tab. Focus the add-item input.
+
+**Expected:** Placeholder reads "Add a shopping item..." (not "Add a grocery item...").
