@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Sprout, Sparkles, Flame, Sun, Moon, LogOut, ShieldCheck } from "lucide-react";
+import { Sprout, Sparkles, Flame, Sun, Moon, LogOut, ShieldCheck, Leaf } from "lucide-react";
 import { useTheme } from "@/lib/hooks/useTheme";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useIsAdmin } from "@/lib/hooks/useIsAdmin";
 import UserAvatar from "@/components/shared/UserAvatar";
 
 const links = [
-  { href: "/garden",    label: "The Garden",    icon: Sprout   },
-  { href: "/sanctuary", label: "The Sanctuary", icon: Sparkles },
-  { href: "/hearth",    label: "The Hearth",    icon: Flame    },
+  { href: "/garden",    label: "The Garden",       icon: Sprout   },
+  { href: "/sanctuary", label: "The Sanctuary",    icon: Sparkles },
+  { href: "/hearth",    label: "The Hearth",       icon: Flame    },
+  { href: "/grove",     label: "Reflection Grove", icon: Leaf     },
 ];
 
 function isSunday() {

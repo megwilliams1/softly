@@ -18,11 +18,12 @@ This directory contains manual test cases for every feature in Softly. All test 
 | File | Coverage |
 |---|---|
 | `auth.md` | Sign-up, sign-in, Google auth, forgot password, sign-out, auth guards |
-| `garden.md` | Meal Planner, Kids' Activities, Checklist, Plant a Goal |
+| `garden.md` | Meal Planner, Kids' Activities (incl. multi-kid), Checklist/Shopping, Plant a Goal |
 | `sanctuary.md` | Mood Check-in, Gratitude Journal, Daily Affirmation, Self-Care Reminders, Weekly Summary |
 | `hearth.md` | Browse recipes, submit recipe (linked + written), recipe detail, delete, auth gate |
 | `reset.md` | Weekly Reset 5-step flow, completion state, revisit |
 | `navigation.md` | Navbar auth state, active links, Sunday prompt, dark mode toggle, mobile layout |
+| `grove.md` | MoodGate, Journal Editor, Soft Reset, Past Entries, Storm Tracker, Future Notes, Tiny Wins, dark mode, mobile |
 
 ---
 

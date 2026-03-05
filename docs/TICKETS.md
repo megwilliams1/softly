@@ -645,3 +645,36 @@ As a user, I want to assign a category to a recipe when I submit it and filter t
 - [ ] Each `RecipeCard` shows a small category label
 - [ ] Existing recipes without a category are treated as "Other"
 - [ ] Mobile responsive, dark mode compatible
+
+---
+
+### TICKET-031 · Reflection Grove
+
+**Branch:** `feature/ticket-031-reflection-grove`
+
+**User Story:**
+As a user, I want a dedicated journaling space that responds to my mood, holds my past reflections, lets me send notes to my future self, and celebrates small wins — so that I have a private, emotionally intelligent corner of the app just for me.
+
+**Background:**
+The Grove is Softly's emotional core for solo reflection. Unlike the Sanctuary (which covers mood check-in, gratitude, and reminders), the Grove is a full journaling experience. It is mood-responsive — the background and particle effects shift based on how you're feeling. It also tracks patterns over time (Storm Tracker) and supports asynchronous self-communication (Future Notes).
+
+**Acceptance Criteria:**
+- [ ] New protected route `/grove` using `useRequireAuth()`
+- [ ] "Reflection Grove" with `Leaf` icon added to Navbar
+- [ ] `MoodGate` component: shows mood picker if no mood set today; shows confirmed state if mood already set; calls `onMoodConfirmed(mood)` to gate entry
+- [ ] `GroveShell` component: mood-responsive background color (light and dark mode variants), transitions smoothly between moods
+- [ ] `GroveParticles` component: 5 particle types (pollen, petals, wind, drops, fade) rendered as CSS-animated absolutely-positioned elements; keyframes in `animations.css`
+- [ ] `useJournal` hook: `users/{uid}/journal/entries` single doc, `Record<dateKey, JournalEntry>`, exposes `todayEntry`, `fullHistory`, `saveEntry`
+- [ ] `JournalEditor` component: free-write and prompt modes; 15-prompt bank with shuffle; shows saved entry read-only with Edit button; calls `onSaved()` after save
+- [ ] `SoftReset` component: breathing overlay that auto-cycles through 3 steps; dismisses after 2 min or "I'm ready" click
+- [ ] `PastEntries` component: collapsed by default; expands to show past entries sorted by date desc; click to expand full text
+- [ ] `StormTracker` component: only shown when 7+ journal entries exist; computes most common day, time of day, and mood; renders 2–3 poetic insights
+- [ ] `useFutureNotes` hook: `users/{uid}/futureNotes/{id}` collection; `dueNotes` computed as `deliveryDate <= today && !delivered`
+- [ ] `FutureNoteSection` component: shows due note modal on page load (marks delivered); write + date picker form (max 30 days); pending note list with delete
+- [ ] `useTinyWins` hook: `users/{uid}/tinyWins/{id}` collection; sorted by `createdAt` desc
+- [ ] `TinyWinsVault` component: 5 emoji tags; input + add; scrollable list with hover-to-delete
+- [ ] `DueNotesBanner` component: shown on `/garden` when due future notes exist; dismissible; links to `/grove`
+- [ ] Grove journal entries wired into `useWeeklySummary` presence tracking (a journal day counts as "shown up")
+- [ ] Dark mode: mood theme backgrounds use dark variants; all card panels use `var(--color-white)` (not hardcoded rgba whites)
+- [ ] Mobile responsive (375px+): mood buttons wrap, no horizontal overflow
+- [ ] TypeScript: `tsc --noEmit` passes with zero errors
