@@ -243,8 +243,10 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
         {/* Fields */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
-            <label style={labelStyle}>Recipe title *</label>
+            <label htmlFor="submit-title" style={labelStyle}>Recipe title *</label>
             <input
+              id="submit-title"
+              name="title"
               autoFocus
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -281,8 +283,10 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
 
           {mode === "linked" && (
             <div>
-              <label style={labelStyle}>Recipe URL *</label>
+              <label htmlFor="submit-url" style={labelStyle}>Recipe URL *</label>
               <input
+                id="submit-url"
+                name="recipeUrl"
                 value={recipeUrl}
                 onChange={(e) => setRecipeUrl(e.target.value)}
                 onBlur={() => {
@@ -314,8 +318,10 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
           {mode === "original" && (
             <>
               <div>
-                <label style={labelStyle}>Ingredients <span style={{ fontWeight: 400 }}>(one per line)</span></label>
+                <label htmlFor="submit-ingredients" style={labelStyle}>Ingredients <span style={{ fontWeight: 400 }}>(one per line)</span></label>
                 <textarea
+                  id="submit-ingredients"
+                  name="ingredients"
                   value={ingredientsText}
                   onChange={(e) => setIngredientsText(e.target.value)}
                   placeholder={"2 cups flour\n1 tsp salt\n..."}
@@ -325,8 +331,10 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
               </div>
 
               <div>
-                <label style={labelStyle}>Instructions <span style={{ fontWeight: 400 }}>(one step per line)</span></label>
+                <label htmlFor="submit-instructions" style={labelStyle}>Instructions <span style={{ fontWeight: 400 }}>(one step per line)</span></label>
                 <textarea
+                  id="submit-instructions"
+                  name="instructions"
                   value={instructionsText}
                   onChange={(e) => setInstructionsText(e.target.value)}
                   placeholder={"Preheat oven to 350°F\nMix dry ingredients\n..."}
@@ -337,16 +345,16 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
-                  <label style={labelStyle}>Prep time</label>
-                  <input value={prepTime} onChange={(e) => setPrepTime(e.target.value)} placeholder="15 min" style={inputStyle} />
+                  <label htmlFor="submit-prep" style={labelStyle}>Prep time</label>
+                  <input id="submit-prep" name="prepTime" value={prepTime} onChange={(e) => setPrepTime(e.target.value)} placeholder="15 min" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Cook time</label>
-                  <input value={cookTime} onChange={(e) => setCookTime(e.target.value)} placeholder="30 min" style={inputStyle} />
+                  <label htmlFor="submit-cook" style={labelStyle}>Cook time</label>
+                  <input id="submit-cook" name="cookTime" value={cookTime} onChange={(e) => setCookTime(e.target.value)} placeholder="30 min" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Servings</label>
-                  <input value={servings} onChange={(e) => setServings(e.target.value)} placeholder="4" style={inputStyle} />
+                  <label htmlFor="submit-servings" style={labelStyle}>Servings</label>
+                  <input id="submit-servings" name="servings" value={servings} onChange={(e) => setServings(e.target.value)} placeholder="4" style={inputStyle} />
                 </div>
               </div>
             </>
