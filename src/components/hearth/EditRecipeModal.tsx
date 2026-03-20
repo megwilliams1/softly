@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { type Recipe, type RecipeInput, type RecipeCategory } from "@/lib/hooks/useRecipes";
+import ImagePicker from "@/components/shared/ImagePicker";
+import { uploadImage, ImageUploadError } from "@/lib/utils/storage";
 
 const CATEGORIES: { value: RecipeCategory; label: string }[] = [
   { value: "breakfast", label: "Breakfast" },
@@ -33,6 +35,7 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
   const [prepTime, setPrepTime] = useState(recipe.prepTime ?? "");
   const [cookTime, setCookTime] = useState(recipe.cookTime ?? "");
   const [servings, setServings] = useState(recipe.servings ?? "");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,6 +59,11 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
         category,
       };
 
+      if (selectedFile) {
+        const path = `recipes/${recipe.authorId}/${Date.now()}`;
+        updates.imageUrl = await uploadImage(selectedFile, path);
+      }
+
       if (recipe.type === "linked") {
         updates.recipeUrl = recipeUrl.trim();
       } else {
@@ -68,8 +76,12 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
 
       await onSave(updates);
       onClose();
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      if (err instanceof ImageUploadError) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
       setSaving(false);
     }
   }
@@ -197,6 +209,13 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
               ))}
             </div>
           </div>
+
+          <ImagePicker
+            currentImageUrl={recipe.imageUrl}
+            onFileSelect={(file) => setSelectedFile(file)}
+            label="Recipe image"
+            disabled={saving}
+          />
 
           {/* Linked: URL */}
           {recipe.type === "linked" && (
