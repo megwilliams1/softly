@@ -15,6 +15,7 @@ const FILTER_OPTIONS: { value: RecipeCategory | "all"; label: string }[] = [
   { value: "dinner",    label: "Dinner"    },
   { value: "dessert",   label: "Dessert"   },
   { value: "snack",     label: "Snack"     },
+  { value: "drinks",    label: "Drinks"    },
   { value: "other",     label: "Other"     },
 ];
 

@@ -18,7 +18,7 @@ import { db } from "@/lib/firebase";
 // ─── Types ────────────────────────────────────────────
 
 export type RecipeType = "linked" | "original";
-export type RecipeCategory = "breakfast" | "lunch" | "dinner" | "dessert" | "snack" | "other";
+export type RecipeCategory = "breakfast" | "lunch" | "dinner" | "dessert" | "snack" | "drinks" | "other";
 
 export interface Recipe {
   id: string;
