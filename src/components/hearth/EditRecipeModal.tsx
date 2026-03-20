@@ -1,11 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Link2, PenLine, X } from "lucide-react";
-import { type User } from "firebase/auth";
-import { type RecipeInput, type RecipeCategory } from "@/lib/hooks/useRecipes";
-import ImagePicker from "@/components/shared/ImagePicker";
-import { uploadImage, ImageUploadError } from "@/lib/utils/storage";
+import { X } from "lucide-react";
+import { type Recipe, type RecipeInput, type RecipeCategory } from "@/lib/hooks/useRecipes";
 
 const CATEGORIES: { value: RecipeCategory; label: string }[] = [
   { value: "breakfast", label: "Breakfast" },
@@ -18,28 +15,26 @@ const CATEGORIES: { value: RecipeCategory; label: string }[] = [
 ];
 
 interface Props {
-  user: User;
-  onSubmit: (input: RecipeInput) => Promise<void>;
+  recipe: Recipe;
+  onSave: (updates: Partial<RecipeInput>) => Promise<void>;
   onClose: () => void;
 }
 
-export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Props) {
-  const [mode, setMode] = useState<"linked" | "original">("linked");
-  const [category, setCategory] = useState<RecipeCategory>("other");
-  const [title, setTitle] = useState("");
-  const [recipeUrl, setRecipeUrl] = useState("");
-  const [ingredientsText, setIngredientsText] = useState("");
-  const [instructionsText, setInstructionsText] = useState("");
-  const [prepTime, setPrepTime] = useState("");
-  const [cookTime, setCookTime] = useState("");
-  const [servings, setServings] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
+  const [title, setTitle] = useState(recipe.title);
+  const [category, setCategory] = useState<RecipeCategory>(recipe.category ?? "other");
+  const [recipeUrl, setRecipeUrl] = useState(recipe.recipeUrl ?? "");
+  const [ingredientsText, setIngredientsText] = useState(
+    recipe.ingredients?.join("\n") ?? ""
+  );
+  const [instructionsText, setInstructionsText] = useState(
+    recipe.instructions?.join("\n") ?? ""
+  );
+  const [prepTime, setPrepTime] = useState(recipe.prepTime ?? "");
+  const [cookTime, setCookTime] = useState(recipe.cookTime ?? "");
+  const [servings, setServings] = useState(recipe.servings ?? "");
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Image state
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [ogImageUrl, setOgImageUrl] = useState<string | null>(null);
-  const [fetchingOg, setFetchingOg] = useState(false);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -49,80 +44,33 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  function isValidUrl(url: string): boolean {
-    try {
-      const u = new URL(url);
-      return u.protocol === "http:" || u.protocol === "https:";
-    } catch {
-      return false;
-    }
-  }
+  const canSave = title.trim() !== "";
 
-  async function fetchOgImage(url: string) {
-    if (!isValidUrl(url)) return;
-    setFetchingOg(true);
-    try {
-      const res = await fetch(`/api/og-preview?url=${encodeURIComponent(url)}`);
-      const data = await res.json();
-      if (data.ogImage) {
-        setOgImageUrl(data.ogImage);
-      }
-    } catch {
-      // Non-fatal — just don't auto-fill
-    } finally {
-      setFetchingOg(false);
-    }
-  }
-
-  const recipeUrlInvalid = mode === "linked" && recipeUrl.trim() !== "" && !isValidUrl(recipeUrl.trim());
-
-  const canSubmit =
-    title.trim() !== "" &&
-    (mode === "original" || (recipeUrl.trim() !== "" && !recipeUrlInvalid));
-
-  async function handleSubmit() {
-    if (!canSubmit) return;
-    setSubmitting(true);
+  async function handleSave() {
+    if (!canSave) return;
+    setSaving(true);
     setError(null);
     try {
-      let finalImageUrl: string | undefined;
+      const updates: Partial<RecipeInput> = {
+        title: title.trim(),
+        category,
+      };
 
-      if (selectedFile) {
-        const path = `recipes/${_user.uid}/${Date.now()}`;
-        finalImageUrl = await uploadImage(selectedFile, path);
-      } else if (ogImageUrl) {
-        finalImageUrl = ogImageUrl;
-      }
-
-      const input: RecipeInput =
-        mode === "linked"
-          ? {
-              type: "linked",
-              category,
-              title: title.trim(),
-              recipeUrl: recipeUrl.trim(),
-              imageUrl: finalImageUrl,
-            }
-          : {
-              type: "original",
-              category,
-              title: title.trim(),
-              imageUrl: finalImageUrl,
-              ingredients: ingredientsText.split("\n").map((s) => s.trim()).filter(Boolean),
-              instructions: instructionsText.split("\n").map((s) => s.trim()).filter(Boolean),
-              prepTime: prepTime.trim() || undefined,
-              cookTime: cookTime.trim() || undefined,
-              servings: servings.trim() || undefined,
-            };
-      await onSubmit(input);
-      onClose();
-    } catch (err) {
-      if (err instanceof ImageUploadError) {
-        setError(err.message);
+      if (recipe.type === "linked") {
+        updates.recipeUrl = recipeUrl.trim();
       } else {
-        setError("Something went wrong. Please try again.");
+        updates.ingredients = ingredientsText.split("\n").map((s) => s.trim()).filter(Boolean);
+        updates.instructions = instructionsText.split("\n").map((s) => s.trim()).filter(Boolean);
+        updates.prepTime = prepTime.trim() || undefined;
+        updates.cookTime = cookTime.trim() || undefined;
+        updates.servings = servings.trim() || undefined;
       }
-      setSubmitting(false);
+
+      await onSave(updates);
+      onClose();
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setSaving(false);
     }
   }
 
@@ -187,7 +135,7 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "var(--color-pebble)",
+            color: "var(--color-stone)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -197,7 +145,6 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
           <X size={18} />
         </button>
 
-        {/* Title */}
         <h2
           style={{
             fontFamily: "var(--font-display)",
@@ -207,52 +154,22 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
             marginBottom: "20px",
           }}
         >
-          Share a Recipe
+          Edit Recipe
         </h2>
 
-        {/* Mode toggle */}
-        <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
-          {(["linked", "original"] as const).map((m) => (
-            <button
-              key={m}
-              onClick={() => {
-                setMode(m);
-                if (m === "original") setOgImageUrl(null);
-              }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "8px 16px",
-                borderRadius: "var(--radius-full)",
-                border: "1px solid rgba(176, 168, 154, 0.4)",
-                backgroundColor: mode === m ? "var(--color-butter)" : "transparent",
-                color: mode === m ? "var(--color-soil)" : "var(--color-stone)",
-                fontFamily: "var(--font-body)",
-                fontSize: "0.85rem",
-                fontWeight: mode === m ? 500 : 400,
-                cursor: "pointer",
-              }}
-            >
-              {m === "linked" ? <Link2 size={14} /> : <PenLine size={14} />}
-              {m === "linked" ? "Link a recipe" : "Write my own"}
-            </button>
-          ))}
-        </div>
-
-        {/* Fields */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {/* Title */}
           <div>
             <label style={labelStyle}>Recipe title *</label>
             <input
               autoFocus
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Grandma's Chicken Soup"
               style={inputStyle}
             />
           </div>
 
+          {/* Category */}
           <div>
             <label style={labelStyle}>Category</label>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -279,46 +196,27 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
             </div>
           </div>
 
-          {mode === "linked" && (
+          {/* Linked: URL */}
+          {recipe.type === "linked" && (
             <div>
-              <label style={labelStyle}>Recipe URL *</label>
+              <label style={labelStyle}>Recipe URL</label>
               <input
                 value={recipeUrl}
                 onChange={(e) => setRecipeUrl(e.target.value)}
-                onBlur={() => {
-                  if (recipeUrl.trim() && !ogImageUrl) fetchOgImage(recipeUrl.trim());
-                }}
                 placeholder="https://..."
                 style={inputStyle}
               />
-              {recipeUrlInvalid && (
-                <p style={{ marginTop: "4px", fontSize: "0.78rem", color: "var(--color-error)", fontFamily: "var(--font-body)" }}>
-                  Please enter a valid URL starting with https://
-                </p>
-              )}
-              {fetchingOg && (
-                <p style={{ marginTop: "4px", fontSize: "0.78rem", color: "var(--color-stone)", fontFamily: "var(--font-body)" }}>
-                  Fetching preview...
-                </p>
-              )}
             </div>
           )}
 
-          <ImagePicker
-            currentImageUrl={ogImageUrl ?? undefined}
-            onFileSelect={(file) => setSelectedFile(file)}
-            label="Recipe image"
-            disabled={submitting}
-          />
-
-          {mode === "original" && (
+          {/* Original: ingredients + instructions */}
+          {recipe.type === "original" && (
             <>
               <div>
                 <label style={labelStyle}>Ingredients <span style={{ fontWeight: 400 }}>(one per line)</span></label>
                 <textarea
                   value={ingredientsText}
                   onChange={(e) => setIngredientsText(e.target.value)}
-                  placeholder={"2 cups flour\n1 tsp salt\n..."}
                   rows={5}
                   style={{ ...inputStyle, resize: "vertical" }}
                 />
@@ -329,7 +227,6 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
                 <textarea
                   value={instructionsText}
                   onChange={(e) => setInstructionsText(e.target.value)}
-                  placeholder={"Preheat oven to 350°F\nMix dry ingredients\n..."}
                   rows={5}
                   style={{ ...inputStyle, resize: "vertical" }}
                 />
@@ -359,7 +256,6 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
           </p>
         )}
 
-        {/* Actions */}
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "24px" }}>
           <button
             onClick={onClose}
@@ -377,22 +273,22 @@ export default function SubmitRecipeModal({ user: _user, onSubmit, onClose }: Pr
             Cancel
           </button>
           <button
-            onClick={handleSubmit}
-            disabled={!canSubmit || submitting}
+            onClick={handleSave}
+            disabled={!canSave || saving}
             style={{
               padding: "9px 18px",
               borderRadius: "var(--radius-full)",
               border: "none",
-              backgroundColor: canSubmit && !submitting ? "var(--color-butter)" : "var(--color-pebble)",
+              backgroundColor: canSave && !saving ? "var(--color-butter)" : "var(--color-pebble)",
               color: "var(--color-soil)",
               fontFamily: "var(--font-body)",
               fontSize: "0.9rem",
               fontWeight: 500,
-              cursor: canSubmit && !submitting ? "pointer" : "not-allowed",
-              opacity: submitting ? 0.7 : 1,
+              cursor: canSave && !saving ? "pointer" : "not-allowed",
+              opacity: saving ? 0.7 : 1,
             }}
           >
-            {submitting ? "Sharing..." : "Share Recipe"}
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

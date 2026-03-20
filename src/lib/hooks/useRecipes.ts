@@ -8,6 +8,7 @@ import {
   onSnapshot,
   addDoc,
   deleteDoc,
+  updateDoc,
   doc,
   serverTimestamp,
   type Timestamp,
@@ -18,7 +19,7 @@ import { db } from "@/lib/firebase";
 // ─── Types ────────────────────────────────────────────
 
 export type RecipeType = "linked" | "original";
-export type RecipeCategory = "breakfast" | "lunch" | "dinner" | "dessert" | "snack" | "other";
+export type RecipeCategory = "breakfast" | "lunch" | "dinner" | "dessert" | "snack" | "drinks" | "other";
 
 export interface Recipe {
   id: string;
@@ -85,5 +86,9 @@ export function useRecipes() {
     await deleteDoc(doc(db, "recipes", recipeId));
   }
 
-  return { recipes, loading, submitRecipe, deleteRecipe };
+  async function updateRecipe(recipeId: string, updates: Partial<RecipeInput>) {
+    await updateDoc(doc(db, "recipes", recipeId), updates);
+  }
+
+  return { recipes, loading, submitRecipe, deleteRecipe, updateRecipe };
 }
