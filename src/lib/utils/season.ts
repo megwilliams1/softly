@@ -15,3 +15,10 @@ export const seasonLabels: Record<Season, string> = {
   fall: "🍂 Fall",
   winter: "❄️ Winter",
 };
+
+export const seasonGreetings: Record<Season, string> = {
+  spring: "Happy spring",
+  summer: "Enjoy the sunshine",
+  fall: "Welcome to autumn",
+  winter: "Stay warm this winter",
+};
