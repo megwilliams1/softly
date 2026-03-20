@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { ExternalLink, Trash2, X } from "lucide-react";
+import { ExternalLink, Trash2, Pencil, X } from "lucide-react";
 import { type Recipe } from "@/lib/hooks/useRecipes";
 import { type User } from "firebase/auth";
 import UserAvatar from "@/components/shared/UserAvatar";
@@ -9,11 +9,13 @@ import UserAvatar from "@/components/shared/UserAvatar";
 interface Props {
   recipe: Recipe;
   currentUser: User | null;
+  isAdmin: boolean;
   onDelete: () => void;
+  onEdit: () => void;
   onClose: () => void;
 }
 
-export default function RecipeDetailModal({ recipe, currentUser, onDelete, onClose }: Props) {
+export default function RecipeDetailModal({ recipe, currentUser, isAdmin, onDelete, onEdit, onClose }: Props) {
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -23,6 +25,7 @@ export default function RecipeDetailModal({ recipe, currentUser, onDelete, onClo
   }, [onClose]);
 
   const isAuthor = currentUser?.uid === recipe.authorId;
+  const canManage = isAuthor || isAdmin;
 
   return (
     <div
@@ -221,9 +224,39 @@ export default function RecipeDetailModal({ recipe, currentUser, onDelete, onClo
             </>
           )}
 
-          {/* Delete button (author only) */}
-          {isAuthor && (
-            <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid rgba(176, 168, 154, 0.2)" }}>
+          {/* Admin / author controls */}
+          {canManage && (
+            <div
+              style={{
+                marginTop: "24px",
+                paddingTop: "16px",
+                borderTop: "1px solid rgba(176, 168, 154, 0.2)",
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
+            >
+              {(isAdmin || isAuthor) && (
+                <button
+                  onClick={onEdit}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: "8px 16px",
+                    borderRadius: "var(--radius-full)",
+                    border: "1px solid var(--color-sage)",
+                    backgroundColor: "transparent",
+                    color: "var(--color-moss)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.85rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Pencil size={14} />
+                  Edit recipe
+                </button>
+              )}
               <button
                 onClick={onDelete}
                 style={{

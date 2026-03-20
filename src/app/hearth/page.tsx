@@ -4,9 +4,11 @@ import { useState } from "react";
 import { Flame } from "lucide-react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useRecipes, type Recipe, type RecipeCategory } from "@/lib/hooks/useRecipes";
+import { isAdminUser } from "@/lib/admin";
 import RecipeCard from "@/components/hearth/RecipeCard";
 import SubmitRecipeModal from "@/components/hearth/SubmitRecipeModal";
 import RecipeDetailModal from "@/components/hearth/RecipeDetailModal";
+import EditRecipeModal from "@/components/hearth/EditRecipeModal";
 
 const FILTER_OPTIONS: { value: RecipeCategory | "all"; label: string }[] = [
   { value: "all",       label: "All"       },
@@ -21,10 +23,12 @@ const FILTER_OPTIONS: { value: RecipeCategory | "all"; label: string }[] = [
 
 export default function HearthPage() {
   const { user, loading } = useRequireAuth();
-  const { recipes, loading: recipesLoading, submitRecipe, deleteRecipe } = useRecipes();
+  const { recipes, loading: recipesLoading, submitRecipe, deleteRecipe, updateRecipe } = useRecipes();
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [activeFilter, setActiveFilter] = useState<RecipeCategory | "all">("all");
+  const isAdmin = isAdminUser(user);
 
   const filteredRecipes = activeFilter === "all"
     ? recipes
@@ -171,11 +175,24 @@ export default function HearthPage() {
         <RecipeDetailModal
           recipe={selectedRecipe}
           currentUser={user}
+          isAdmin={isAdmin}
           onDelete={async () => {
             await deleteRecipe(selectedRecipe.id);
             setSelectedRecipe(null);
           }}
+          onEdit={() => {
+            setEditingRecipe(selectedRecipe);
+            setSelectedRecipe(null);
+          }}
           onClose={() => setSelectedRecipe(null)}
+        />
+      )}
+
+      {editingRecipe && (
+        <EditRecipeModal
+          recipe={editingRecipe}
+          onSave={(updates) => updateRecipe(editingRecipe.id, updates)}
+          onClose={() => setEditingRecipe(null)}
         />
       )}
     </main>

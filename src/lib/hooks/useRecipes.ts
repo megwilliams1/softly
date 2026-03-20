@@ -8,6 +8,7 @@ import {
   onSnapshot,
   addDoc,
   deleteDoc,
+  updateDoc,
   doc,
   serverTimestamp,
   type Timestamp,
@@ -85,5 +86,9 @@ export function useRecipes() {
     await deleteDoc(doc(db, "recipes", recipeId));
   }
 
-  return { recipes, loading, submitRecipe, deleteRecipe };
+  async function updateRecipe(recipeId: string, updates: Partial<RecipeInput>) {
+    await updateDoc(doc(db, "recipes", recipeId), updates);
+  }
+
+  return { recipes, loading, submitRecipe, deleteRecipe, updateRecipe };
 }
