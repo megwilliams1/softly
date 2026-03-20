@@ -160,8 +160,10 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Title */}
           <div>
-            <label style={labelStyle}>Recipe title *</label>
+            <label htmlFor="edit-title" style={labelStyle}>Recipe title *</label>
             <input
+              id="edit-title"
+              name="title"
               autoFocus
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -199,8 +201,10 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
           {/* Linked: URL */}
           {recipe.type === "linked" && (
             <div>
-              <label style={labelStyle}>Recipe URL</label>
+              <label htmlFor="edit-url" style={labelStyle}>Recipe URL</label>
               <input
+                id="edit-url"
+                name="recipeUrl"
                 value={recipeUrl}
                 onChange={(e) => setRecipeUrl(e.target.value)}
                 placeholder="https://..."
@@ -213,8 +217,10 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
           {recipe.type === "original" && (
             <>
               <div>
-                <label style={labelStyle}>Ingredients <span style={{ fontWeight: 400 }}>(one per line)</span></label>
+                <label htmlFor="edit-ingredients" style={labelStyle}>Ingredients <span style={{ fontWeight: 400 }}>(one per line)</span></label>
                 <textarea
+                  id="edit-ingredients"
+                  name="ingredients"
                   value={ingredientsText}
                   onChange={(e) => setIngredientsText(e.target.value)}
                   rows={5}
@@ -223,8 +229,10 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
               </div>
 
               <div>
-                <label style={labelStyle}>Instructions <span style={{ fontWeight: 400 }}>(one step per line)</span></label>
+                <label htmlFor="edit-instructions" style={labelStyle}>Instructions <span style={{ fontWeight: 400 }}>(one step per line)</span></label>
                 <textarea
+                  id="edit-instructions"
+                  name="instructions"
                   value={instructionsText}
                   onChange={(e) => setInstructionsText(e.target.value)}
                   rows={5}
@@ -234,16 +242,16 @@ export default function EditRecipeModal({ recipe, onSave, onClose }: Props) {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                 <div>
-                  <label style={labelStyle}>Prep time</label>
-                  <input value={prepTime} onChange={(e) => setPrepTime(e.target.value)} placeholder="15 min" style={inputStyle} />
+                  <label htmlFor="edit-prep" style={labelStyle}>Prep time</label>
+                  <input id="edit-prep" name="prepTime" value={prepTime} onChange={(e) => setPrepTime(e.target.value)} placeholder="15 min" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Cook time</label>
-                  <input value={cookTime} onChange={(e) => setCookTime(e.target.value)} placeholder="30 min" style={inputStyle} />
+                  <label htmlFor="edit-cook" style={labelStyle}>Cook time</label>
+                  <input id="edit-cook" name="cookTime" value={cookTime} onChange={(e) => setCookTime(e.target.value)} placeholder="30 min" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Servings</label>
-                  <input value={servings} onChange={(e) => setServings(e.target.value)} placeholder="4" style={inputStyle} />
+                  <label htmlFor="edit-servings" style={labelStyle}>Servings</label>
+                  <input id="edit-servings" name="servings" value={servings} onChange={(e) => setServings(e.target.value)} placeholder="4" style={inputStyle} />
                 </div>
               </div>
             </>
