@@ -1,101 +1,151 @@
-# Softly — Design System
-
-## Concept
-
-The visual metaphor is a **living garden**. The UI should feel like
-stepping outside on a warm spring morning — alive, breathing, soft,
-and intentional. Nothing harsh. Nothing corporate. Every interaction
-should feel like a small moment of care.
+# 🌿 Softly — Design System
 
 ---
 
-## Color Palette
+## 🌸 Concept
 
-These are defined as CSS variables in `globals.css`.
+Softly is a calm, garden-themed app designed for moms to manage family life without feeling overwhelmed.
+
+The visual metaphor is a **living garden**.
+
+The UI should feel like:
+- stepping outside on a warm spring morning
+- alive, breathing, soft, and intentional
+
+Nothing harsh. Nothing corporate. Every interaction should feel like a small moment of care.
+
+**Softly is not a productivity app.**
+It is an emotional support system disguised as a planner.
+
+Every design decision should answer:
+> "Does this reduce stress or add to it?"
+
+If it adds stress → simplify or remove.
+
+---
+
+## 🚨 Strict Design Rules
+
+- Never use more than 2 accent colors on a single screen
+- Do not use pure black (#000000) — use `--color-shadow` instead
+- Garden and Sanctuary must feel visually distinct
+- Use soft spacing — avoid dense layouts
+- All UI elements must use rounded corners (no sharp edges)
+- Animations must be subtle and never distracting
+- If a design feels busy, simplify it
+
+**If any rule conflicts, prioritize calmness and clarity over feature density.**
+
+---
+
+## 🌿 Section Ownership
+
+### Garden
+- Scheduling, tasks (Sprouts), kids activities, shopping lists, plant growth
+- Must feel structured, calm, and grounded
+- Minimal animations — keep clean and focused
+- Accent: sage tones
+
+### Sanctuary
+- Affirmations, gratitude, weekly emotional summaries, Reflection Grove entry point
+- Must feel soft, personal, and spacious
+- Slightly more motion allowed
+- Accent: bloom pink and lavender
+
+### Reflection Grove
+- Journaling, emotional release, Tiny Wins Vault
+- Gentle calming animations allowed
+- Accent: lavender
+
+### Hearth
+- Recipes, meal inspiration
+- Must feel cozy and simple
+- Accent: warm neutrals (butter, sand)
+
+---
+
+## 🎨 Color Palette
 
 ```css
 :root {
   /* Backgrounds */
-  --color-cream: #faf6f0; /* main app background */
-  --color-mist: #e8efe8; /* subtle section backgrounds */
-  --color-white: #ffffff; /* card backgrounds */
+  --color-cream: #faf6f0;      /* main app background */
+  --color-mist: #e8efe8;       /* subtle section backgrounds */
+  --color-white: #ffffff;      /* card backgrounds */
 
   /* Primary Palette */
   --color-bloom-pink: #f2c4ce; /* soft rose — primary accent */
-  --color-sage: #a8b89a; /* muted green — secondary accent */
-  --color-butter: #f7e6b0; /* warm yellow — highlights */
-  --color-lavender: #d4c5e2; /* soft purple — mood/sanctuary */
+  --color-sage: #a8b89a;       /* muted green — secondary accent */
+  --color-butter: #f7e6b0;     /* warm yellow — highlights */
+  --color-lavender: #d4c5e2;   /* soft purple — Sanctuary/Grove ONLY */
 
   /* Rich Tones */
-  --color-soil: #6b4f3a; /* deep warm brown — headings */
-  --color-moss: #5c6b50; /* deep green — body text */
+  --color-soil: #6b4f3a;       /* deep warm brown — headings */
+  --color-moss: #5c6b50;       /* deep green — body text */
   --color-blush-deep: #d4899a; /* deeper rose — active states */
 
   /* Neutrals */
-  --color-pebble: #b0a89a; /* muted warm gray — borders */
-  --color-stone: #7a7068; /* medium gray — secondary text */
-  --color-shadow: #3d3530; /* near black — rare, for contrast */
+  --color-pebble: #b0a89a;     /* muted warm gray — borders */
+  --color-stone: #7a7068;      /* medium gray — secondary text */
+  --color-shadow: #3d3530;     /* near black — rare, for contrast */
 
   /* Semantic */
-  --color-success: #a8c5a0; /* soft green */
-  --color-warning: #f2d58a; /* warm amber */
-  --color-error: #e8a0a0; /* soft red */
+  --color-success: #a8c5a0;
+  --color-warning: #f2d58a;
+  --color-error: #e8a0a0;
 }
 ```
 
+### Color Usage Rules
+
+- Use only 1 primary accent and 1 secondary accent per screen
+- Default accent = seasonal primary
+- Garden uses sage tones
+- Sanctuary uses bloom pink and lavender
+- Hearth uses warm neutrals (butter, sand)
+- **Lavender is reserved ONLY for:** Sanctuary, Reflection Grove, emotional UI
+- Avoid mixing pink + lavender + yellow together on one screen
+
 ### Seasonal Overrides
 
-The app detects the current season and overrides accent colors.
-These swap out via a `data-season` attribute on `<html>`.
-
 ```css
-/* Spring (default — March to May) */
 [data-season="spring"] {
-  --color-seasonal-primary: #f2c4ce; /* blush pink */
-  --color-seasonal-secondary: #a8b89a; /* sage */
-  --color-seasonal-accent: #f7e6b0; /* butter */
+  --color-seasonal-primary: #f2c4ce;
+  --color-seasonal-secondary: #a8b89a;
+  --color-seasonal-accent: #f7e6b0;
 }
 
-/* Summer (June to August) */
 [data-season="summer"] {
-  --color-seasonal-primary: #f9d56e; /* golden yellow */
-  --color-seasonal-secondary: #7dbe8e; /* bright sage */
-  --color-seasonal-accent: #ffb085; /* warm peach */
+  --color-seasonal-primary: #f9d56e;
+  --color-seasonal-secondary: #7dbe8e;
+  --color-seasonal-accent: #ffb085;
 }
 
-/* Fall (September to November) */
 [data-season="fall"] {
-  --color-seasonal-primary: #d4845a; /* terracotta */
-  --color-seasonal-secondary: #c8a96e; /* amber */
-  --color-seasonal-accent: #8b5e3c; /* rich brown */
+  --color-seasonal-primary: #d4845a;
+  --color-seasonal-secondary: #c8a96e;
+  --color-seasonal-accent: #8b5e3c;
 }
 
-/* Winter (December to February) */
 [data-season="winter"] {
-  --color-seasonal-primary: #a8bfd4; /* dusty blue */
-  --color-seasonal-secondary: #c4d4e0; /* icy silver */
-  --color-seasonal-accent: #7a9eb5; /* deeper blue */
+  --color-seasonal-primary: #a8bfd4;
+  --color-seasonal-secondary: #c4d4e0;
+  --color-seasonal-accent: #7a9eb5;
 }
 ```
 
 ---
 
-## Typography
-
-Import in `globals.css` from Google Fonts:
+## ✍️ Typography
 
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap");
-```
 
-```css
 :root {
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "DM Sans", sans-serif;
 }
 ```
-
-### Usage Rules
 
 | Element             | Font      | Weight | Size     |
 | ------------------- | --------- | ------ | -------- |
@@ -107,45 +157,42 @@ Import in `globals.css` from Google Fonts:
 | Buttons             | DM Sans   | 500    | 0.9rem   |
 | Nav items           | DM Sans   | 400    | 0.9rem   |
 
-- Display font is for **headings and moments of delight only**
-- Body font handles all interactive elements
-- Never go below 0.8rem for readability
+### Rules
+- Display font = headings and moments of delight only
+- Body font = all UI text
+- Never go below 0.8rem
 - Line height: 1.6 for body, 1.2 for headings
 
 ---
 
-## Spacing
-
-Uses Tailwind's default spacing scale. Key conventions:
+## 📐 Spacing
 
 ```
-Page padding:       px-6  (mobile) → px-12 (desktop)
+Page padding:       px-6 (mobile) → px-12 (desktop)
 Section gap:        gap-8
 Card padding:       p-5 or p-6
 Between sections:   mb-10 or mb-12
 Small gaps:         gap-3 or gap-4
 ```
 
+Always prioritize breathing room.
+
 ---
 
-## Border Radius
+## 🔘 Border Radius
 
 ```css
 :root {
-  --radius-sm: 8px; /* chips, badges */
-  --radius-md: 14px; /* cards */
-  --radius-lg: 20px; /* modals, panels */
+  --radius-sm: 8px;      /* chips, badges */
+  --radius-md: 16px;     /* cards */
+  --radius-lg: 24px;     /* modals, panels */
   --radius-full: 9999px; /* pills, avatars */
 }
 ```
 
-In Tailwind: `rounded-lg` (cards), `rounded-2xl` (modals), `rounded-full` (pills)
-
 ---
 
-## Shadows
-
-Soft, warm shadows — never hard or cold.
+## 🌫 Shadows
 
 ```css
 :root {
@@ -157,129 +204,75 @@ Soft, warm shadows — never hard or cold.
 
 ---
 
-## Animations
+## 🌬 Motion Philosophy
 
-Defined in `animations.css`. Keep motion soft — nothing snappy or jarring.
+Motion should feel like nature: slow, gentle, organic.
 
-### Keyframes
+Animations should:
+- guide attention
+- reward interaction
+- create calm
+
+Never:
+- distract
+- overwhelm
+- feel mechanical
 
 ```css
-/* Cards and content blooming upward on entry */
 @keyframes bloom-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Gentle pulse for reminders and highlights */
 @keyframes soft-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.65;
-  }
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
 }
 
-/* Petal drifting in from above */
 @keyframes petal-drift {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) rotate(-8deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) rotate(0deg);
-  }
+  from { opacity: 0; transform: translateY(-20px) rotate(-8deg); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Celebration bloom when task is completed */
 @keyframes bloom-pop {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Fade in gently */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 ```
 
-### Utility Classes
+### Animation Rules by Section
 
-```css
-.animate-bloom-up {
-  animation: bloom-up 0.4s ease-out forwards;
-}
-.animate-soft-pulse {
-  animation: soft-pulse 2.5s ease-in-out infinite;
-}
-.animate-petal-drift {
-  animation: petal-drift 0.5s ease-out forwards;
-}
-.animate-bloom-pop {
-  animation: bloom-pop 0.3s ease-in-out;
-}
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
-}
-```
+| Section          | Animation Level |
+|------------------|----------------|
+| Splash           | Seasonal particles + bloom-up |
+| Garden           | Minimal — no particles |
+| Sanctuary        | Minimal soft motion |
+| Reflection Grove | Gentle calming animations allowed |
+| Hearth           | Minimal |
 
-### Staggered Entry (for lists/cards)
-
-Use animation-delay on children to stagger their bloom-up:
-
-```tsx
-// Each card gets a delay based on its index
-style={{ animationDelay: `${index * 80}ms` }}
-```
-
-### Rules
-
-- Default duration: 300–500ms
-- Easing: `ease-out` for entries, `ease-in-out` for loops
-- Never animate color changes — use transitions instead
-- Hover transitions: `transition-all duration-200`
+- Duration: 300–500ms
+- Easing: ease-out or ease-in-out
+- No bouncing or aggressive motion
 
 ---
 
-## Component Patterns
+## 🧩 Component Patterns
 
 ### Card
-
 ```
-bg-white rounded-[14px] p-5 shadow-[var(--shadow-card)]
+bg-white rounded-[16px] p-5 shadow-[var(--shadow-card)]
 border border-[var(--color-pebble)]/30
 ```
 
 ### Primary Button
-
 ```
 bg-[var(--color-bloom-pink)] text-[var(--color-soil)]
-font-medium rounded-full px-6 py-2.5
+rounded-full px-6 py-2.5
 hover:bg-[var(--color-blush-deep)] transition-all duration-200
 ```
 
 ### Ghost Button
-
 ```
 border border-[var(--color-pebble)] text-[var(--color-moss)]
 rounded-full px-6 py-2.5
@@ -287,14 +280,12 @@ hover:bg-[var(--color-mist)] transition-all duration-200
 ```
 
 ### Badge / Chip
-
 ```
 bg-[var(--color-mist)] text-[var(--color-moss)]
 text-xs font-medium rounded-full px-3 py-1
 ```
 
 ### Input
-
 ```
 w-full bg-[var(--color-cream)] border border-[var(--color-pebble)]
 rounded-lg px-4 py-2.5 text-[var(--color-shadow)]
@@ -304,9 +295,22 @@ transition-colors duration-200
 
 ---
 
-## Icons
+## 📱 Layout Pattern (Mobile-First)
 
-Use `lucide-react` throughout. Keep icon size consistent:
+Every screen should follow this order:
+
+1. **Header** — title or greeting
+2. **Emotional context** — affirmation, seasonal message
+3. **Functional content** — tasks, schedule, recipes
+4. **Supporting content**
+
+**Always show emotional context BEFORE tasks.**
+
+---
+
+## 🖼 Icons
+
+Use `lucide-react` throughout.
 
 - Nav icons: `size={20}`
 - In-card icons: `size={16}`
@@ -314,36 +318,46 @@ Use `lucide-react` throughout. Keep icon size consistent:
 
 ---
 
-## Two Sections — Visual Distinction
+## 🌿 Section Visual Distinction
 
-### 🌿 The Garden (Family Planning)
-
+### Garden
 - Background tint: `var(--color-mist)`
 - Accent: `var(--color-sage)`
 - Feel: organized, grounded, rooted
 
-### 🌸 The Sanctuary (Personal)
-
+### Sanctuary
 - Background tint: `var(--color-cream)`
 - Accent: `var(--color-bloom-pink)`
 - Feel: soft, intimate, personal
 
+### Reflection Grove
+- Background tint: `var(--color-cream)`
+- Accent: `var(--color-lavender)`
+- Feel: quiet, releasing, safe
+
+### Hearth
+- Background tint: `var(--color-cream)`
+- Accent: `var(--color-butter)`
+- Feel: cozy, warm, nourishing
+
 ---
 
-## Do's and Don'ts
+## ✅ Do's and Don'ts
 
 ### Do
-
 - Use Cormorant for headings — it elevates everything
 - Keep lots of white space — the app should breathe
 - Use warm shadows, not cool ones
 - Stagger animations for lists of cards
 - Let the seasonal palette do the heavy lifting
+- Show emotional context before tasks on every screen
+- Reuse card component everywhere
 
 ### Don't
-
-- Use pure black (#000000) — use `--color-shadow` instead
+- Use pure black (#000000) — use `--color-shadow`
 - Use harsh borders — keep them at 30% opacity or less
 - Overcrowd cards — less is more
 - Use jarring or fast animations
 - Mix too many accent colors on one screen
+- Use lavender outside of Sanctuary/Grove
+- Invent new UI patterns unnecessarily

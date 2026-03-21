@@ -71,58 +71,21 @@ const PARTICLE_ANIMATION: Record<Season, string> = {
 
 export default function SeasonalBackground() {
   const season = getSeason();
-  const { emoji } = seasonalStyles[season];
-  const particles = PARTICLES[season];
-  const particleEmoji = PARTICLE_EMOJI[season];
-  const animation = PARTICLE_ANIMATION[season];
 
   return (
-    <>
-      {/* Blob layer — behind page content */}
+    <div
+      aria-hidden="true"
+      className="fixed inset-0 pointer-events-none overflow-hidden"
+      style={{ zIndex: 0 }}
+    >
       <div
-        aria-hidden="true"
-        className="fixed inset-0 pointer-events-none overflow-hidden"
-        style={{ zIndex: 0 }}
-      >
-        <div
-          className="absolute -top-20 -right-20 w-96 h-96 rounded-full opacity-60 blur-3xl"
-          style={{ backgroundColor: "var(--color-seasonal-primary)" }}
-        />
-        <div
-          className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full opacity-50 blur-3xl"
-          style={{ backgroundColor: "var(--color-seasonal-secondary)" }}
-        />
-      </div>
-
-      {/* Particle layer — above page content, non-interactive */}
+        className="absolute -top-20 -right-20 w-96 h-96 rounded-full opacity-40 blur-3xl"
+        style={{ backgroundColor: seasonalStyles[season] ? `var(--color-seasonal-primary)` : undefined }}
+      />
       <div
-        aria-hidden="true"
-        className="fixed inset-0 pointer-events-none overflow-hidden"
-        style={{ zIndex: 2 }}
-      >
-        {particles.map((p, i) => (
-          <div
-            key={i}
-            className="absolute top-0"
-            style={{
-              left: `${p.left}%`,
-              fontSize: `${p.size}px`,
-              animation: `${animation} ${p.duration}s ease-in ${p.delay}s infinite`,
-              opacity: 0,
-            }}
-          >
-            {particleEmoji}
-          </div>
-        ))}
-
-        {/* Season indicator */}
-        <div
-          className="absolute bottom-6 right-6 text-xs"
-          style={{ color: "var(--color-pebble)" }}
-        >
-          <span>{emoji}</span>
-        </div>
-      </div>
-    </>
+        className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full opacity-30 blur-3xl"
+        style={{ backgroundColor: `var(--color-seasonal-secondary)` }}
+      />
+    </div>
   );
 }
