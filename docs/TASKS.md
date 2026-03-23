@@ -44,8 +44,8 @@
 
 ## Phase 7 — Deploy
 
-- [ ] Push to GitHub
-- [ ] Deploy to Vercel
+- [x] Push to GitHub
+- [x] Deploy to Firebase App Hosting
 - [ ] Test on mobile
 
 ---
