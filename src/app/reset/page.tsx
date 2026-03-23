@@ -25,10 +25,9 @@ export default function ResetPage() {
               textTransform: "uppercase",
               letterSpacing: "0.12em",
               fontWeight: 600,
-              color: "var(--color-lavender)",
+              color: "var(--color-lavender-label)",
               fontFamily: "var(--font-body)",
               marginBottom: "8px",
-              filter: "brightness(0.8)",
             }}
           >
             {greeting}
