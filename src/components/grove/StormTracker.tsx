@@ -66,7 +66,7 @@ export default function StormTracker({ uid }: Props) {
           fontSize: "0.65rem",
           textTransform: "uppercase",
           letterSpacing: "0.07em",
-          color: "var(--color-sage)",
+          color: "var(--color-lavender)",
           fontWeight: 600,
           marginBottom: "16px",
         }}

@@ -34,7 +34,7 @@ function getErrorMessage(code: string): string {
 const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "12px 14px",
-  borderRadius: "12px",
+  borderRadius: "var(--radius-md)",
   border: "1px solid rgba(176, 168, 154, 0.4)",
   fontSize: "0.95rem",
   fontFamily: "var(--font-body)",
@@ -179,7 +179,7 @@ export default function AuthPage() {
             softly
           </h1>
           <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--color-stone)" }}>
-            your weekly sanctuary
+            A quiet little garden for your life.
           </p>
         </div>
 
@@ -187,7 +187,7 @@ export default function AuthPage() {
         <div
           style={{
             backgroundColor: "var(--color-white)",
-            borderRadius: "20px",
+            borderRadius: "var(--radius-lg)",
             boxShadow: "var(--shadow-card)",
             padding: "32px",
             display: "flex",
@@ -298,7 +298,7 @@ export default function AuthPage() {
               <p
                 style={{
                   fontSize: "0.85rem",
-                  color: "#c0392b",
+                  color: "var(--color-error)",
                   fontFamily: "var(--font-body)",
                   margin: 0,
                 }}

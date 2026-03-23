@@ -51,7 +51,7 @@ export default function TinyWinsVault({ uid }: Props) {
           fontSize: "0.65rem",
           textTransform: "uppercase",
           letterSpacing: "0.07em",
-          color: "var(--color-sage)",
+          color: "var(--color-lavender)",
           fontWeight: 600,
         }}
       >
@@ -69,7 +69,7 @@ export default function TinyWinsVault({ uid }: Props) {
               padding: "6px 12px",
               borderRadius: "var(--radius-full)",
               backgroundColor: emoji === e ? "var(--color-mist)" : "transparent",
-              border: emoji === e ? "2px solid var(--color-sage)" : "1.5px solid rgba(168,184,154,0.35)",
+              border: emoji === e ? "2px solid var(--color-lavender)" : "1.5px solid rgba(212,197,226,0.5)",
               cursor: "pointer",
               fontSize: "1.1rem",
               transition: "background-color 0.15s ease",
@@ -106,8 +106,8 @@ export default function TinyWinsVault({ uid }: Props) {
           style={{
             padding: "10px 18px",
             borderRadius: "var(--radius-md)",
-            backgroundColor: "var(--color-sage)",
-            color: "var(--color-white)",
+            backgroundColor: "var(--color-lavender)",
+            color: "var(--color-soil)",
             border: "none",
             fontFamily: "var(--font-body)",
             fontSize: "0.9rem",
@@ -145,7 +145,7 @@ export default function TinyWinsVault({ uid }: Props) {
                 borderRadius: "var(--radius-md)",
                 padding: "10px 14px",
                 border: "1px solid rgba(168,184,154,0.2)",
-                borderLeft: "3px solid var(--color-sage)",
+                borderLeft: "3px solid var(--color-lavender)",
                 position: "relative",
                 transition: "box-shadow 0.15s ease",
                 boxShadow: hoveredId === win.id ? "var(--shadow-soft)" : "none",

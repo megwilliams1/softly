@@ -88,7 +88,7 @@ export default function FutureNoteSection({ uid }: Props) {
                 fontSize: "0.65rem",
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
-                color: "var(--color-sage)",
+                color: "var(--color-lavender)",
                 fontWeight: 600,
                 marginBottom: "16px",
               }}
@@ -113,8 +113,8 @@ export default function FutureNoteSection({ uid }: Props) {
               style={{
                 padding: "10px 28px",
                 borderRadius: "var(--radius-full)",
-                backgroundColor: "var(--color-sage)",
-                color: "var(--color-white)",
+                backgroundColor: "var(--color-lavender)",
+                color: "var(--color-soil)",
                 fontFamily: "var(--font-body)",
                 fontSize: "0.9rem",
                 fontWeight: 500,
@@ -145,7 +145,7 @@ export default function FutureNoteSection({ uid }: Props) {
             fontSize: "0.65rem",
             textTransform: "uppercase",
             letterSpacing: "0.07em",
-            color: "var(--color-sage)",
+            color: "var(--color-lavender)",
             fontWeight: 600,
           }}
         >
@@ -203,7 +203,7 @@ export default function FutureNoteSection({ uid }: Props) {
               marginLeft: "auto",
               padding: "9px 22px",
               borderRadius: "var(--radius-full)",
-              backgroundColor: "var(--color-sage)",
+              backgroundColor: "var(--color-lavender)",
               color: "var(--color-white)",
               fontFamily: "var(--font-body)",
               fontSize: "0.85rem",
