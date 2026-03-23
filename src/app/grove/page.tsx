@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
+import { getSeason, seasonGreetings } from "@/lib/utils/season";
 import { useMood } from "@/lib/hooks/useMood";
 import GroveShell from "@/components/grove/GroveShell";
 import MoodCheckin from "@/components/sanctuary/MoodCheckin";
@@ -11,6 +12,8 @@ import PastEntries from "@/components/grove/PastEntries";
 import StormTracker from "@/components/grove/StormTracker";
 import FutureNoteSection from "@/components/grove/FutureNoteSection";
 import TinyWinsVault from "@/components/grove/TinyWinsVault";
+
+const greeting = seasonGreetings[getSeason()];
 
 export default function GrovePage() {
   const { user, loading } = useRequireAuth();
@@ -27,13 +30,33 @@ export default function GrovePage() {
   return (
     <GroveShell mood={shellMood}>
       <main className="px-6 py-10" style={{ maxWidth: "720px", margin: "0 auto" }}>
+        <p
+          style={{
+            fontSize: "0.72rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+            fontWeight: 600,
+            color: "var(--color-lavender)",
+            fontFamily: "var(--font-body)",
+            marginBottom: "6px",
+            filter: "brightness(0.75)",
+          }}
+        >
+          {greeting}
+        </p>
         <h1
-          className="text-4xl mb-1"
-          style={{ fontFamily: "var(--font-display)", color: "var(--color-soil)" }}
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "2.5rem",
+            fontWeight: 500,
+            color: "var(--color-soil)",
+            lineHeight: 1.2,
+            marginBottom: "6px",
+          }}
         >
           Reflection Grove
         </h1>
-        <p style={{ color: "var(--color-stone)", marginBottom: "40px" }}>
+        <p style={{ color: "var(--color-stone)", fontFamily: "var(--font-body)", marginBottom: "40px" }}>
           A quiet place to land.
         </p>
 
