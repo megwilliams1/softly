@@ -110,6 +110,32 @@
   --color-seasonal-accent: #7a9eb5;
 }
 
+/* ─── Dark Mode Seasonal Overrides ───────────────────── */
+/* Must come after both [data-theme="dark"] and [data-season] blocks to win the cascade */
+[data-theme="dark"][data-season="spring"] {
+  --color-seasonal-primary: #7a4858;
+  --color-seasonal-secondary: #4a6844;
+  --color-seasonal-accent: #7a6030;
+}
+
+[data-theme="dark"][data-season="summer"] {
+  --color-seasonal-primary: #806020;
+  --color-seasonal-secondary: #408050;
+  --color-seasonal-accent: #804838;
+}
+
+[data-theme="dark"][data-season="fall"] {
+  --color-seasonal-primary: #803828;
+  --color-seasonal-secondary: #7a6030;
+  --color-seasonal-accent: #503020;
+}
+
+[data-theme="dark"][data-season="winter"] {
+  --color-seasonal-primary: #486080;
+  --color-seasonal-secondary: #607080;
+  --color-seasonal-accent: #405870;
+}
+
 /* ─── Base Styles ─────────────────────────────────────── */
 html {
   background-color: var(--color-cream);
