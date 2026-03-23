@@ -44,6 +44,13 @@ const inputStyle: React.CSSProperties = {
   boxSizing: "border-box",
 };
 
+const FEATURES = [
+  { emoji: "🌱", title: "The Garden",       desc: "Plan meals, track kids' activities, and tend your week." },
+  { emoji: "✨", title: "The Sanctuary",    desc: "Gratitude, mood check-ins, and gentle self-care." },
+  { emoji: "🔥", title: "The Hearth",       desc: "Save and share warm recipes with your people." },
+  { emoji: "🌿", title: "Reflection Grove", desc: "A quiet space to journal, reflect, and grow." },
+];
+
 export default function AuthPage() {
   const router = useRouter();
   const { signIn, signUpWithEmail, signInWithEmail, resetPassword } = useAuth();
@@ -152,257 +159,323 @@ export default function AuthPage() {
             lineHeight: 1.5,
           }}
         >
-          For the best experience, open Softly in Safari or Chrome. Google sign-in doesn't work inside Messenger or Instagram.
+          For the best experience, open Softly in Safari or Chrome. Google sign-in doesn&rsquo;t work inside Messenger or Instagram.
         </div>
       )}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "420px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "28px",
-        }}
-      >
-        {/* Logo */}
-        <div style={{ textAlign: "center" }}>
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "3.5rem",
-              fontWeight: 500,
-              color: "var(--color-soil)",
-              lineHeight: 1,
-              marginBottom: "8px",
-            }}
-          >
-            softly
-          </h1>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--color-stone)" }}>
-            A quiet little garden for your life.
-          </p>
-        </div>
 
-        {/* Card */}
-        <div
-          style={{
-            backgroundColor: "var(--color-white)",
-            borderRadius: "var(--radius-lg)",
-            boxShadow: "var(--shadow-card)",
-            padding: "32px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
-          {/* Mode toggle */}
-          <div
-            style={{
-              display: "flex",
-              backgroundColor: "var(--color-cream)",
-              borderRadius: "var(--radius-full)",
-              padding: "4px",
-            }}
-          >
-            {(["signin", "signup"] as Mode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => switchMode(m)}
-                style={{
-                  flex: 1,
-                  padding: "8px",
-                  borderRadius: "var(--radius-full)",
-                  border: "none",
-                  backgroundColor: mode === m ? "var(--color-white)" : "transparent",
-                  boxShadow: mode === m ? "var(--shadow-soft)" : "none",
-                  fontFamily: "var(--font-body)",
-                  fontSize: "0.875rem",
-                  fontWeight: mode === m ? 500 : 400,
-                  color: mode === m ? "var(--color-soil)" : "var(--color-stone)",
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                {m === "signin" ? "Sign in" : "Create account"}
-              </button>
-            ))}
+      <div className="w-full flex items-center justify-center gap-16" style={{ maxWidth: "900px" }}>
+
+        {/* Left — feature highlights, desktop only */}
+        <div className="hidden md:flex flex-col" style={{ flex: 1, gap: "36px" }}>
+          <div>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "4rem",
+                fontWeight: 500,
+                color: "var(--color-soil)",
+                lineHeight: 1,
+                marginBottom: "14px",
+              }}
+            >
+              softly
+            </h1>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "1.05rem",
+                color: "var(--color-stone)",
+                lineHeight: 1.7,
+                maxWidth: "340px",
+              }}
+            >
+              A gentle space for the life you&rsquo;re tending — your family, your routines, and yourself.
+            </p>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {mode === "signup" && (
-              <input
-                type="text"
-                placeholder="Your name"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                required
-                style={inputStyle}
-              />
-            )}
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {FEATURES.map(({ emoji, title, desc }) => (
+              <div key={title} style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
+                <span style={{ fontSize: "1.4rem", lineHeight: 1, flexShrink: 0 }}>{emoji}</span>
+                <div>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1.05rem",
+                      color: "var(--color-soil)",
+                      fontWeight: 500,
+                      marginBottom: "2px",
+                    }}
+                  >
+                    {title}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.875rem",
+                      color: "var(--color-stone)",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={inputStyle}
-            />
+        {/* Right — auth card */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "420px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "28px",
+            flexShrink: 0,
+          }}
+        >
+          {/* Logo — mobile only */}
+          <div className="md:hidden" style={{ textAlign: "center" }}>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "3.5rem",
+                fontWeight: 500,
+                color: "var(--color-soil)",
+                lineHeight: 1,
+                marginBottom: "8px",
+              }}
+            >
+              softly
+            </h1>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--color-stone)" }}>
+              A quiet little garden for your life.
+            </p>
+          </div>
 
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={inputStyle}
-            />
-
-            {mode === "signup" && (
-              <input
-                type="password"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                style={inputStyle}
-              />
-            )}
-
-            {/* Forgot password */}
-            {mode === "signin" && (
-              <div style={{ textAlign: "right" }}>
+          {/* Card */}
+          <div
+            style={{
+              backgroundColor: "var(--color-white)",
+              borderRadius: "var(--radius-lg)",
+              boxShadow: "var(--shadow-card)",
+              padding: "32px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            {/* Mode toggle */}
+            <div
+              style={{
+                display: "flex",
+                backgroundColor: "var(--color-cream)",
+                borderRadius: "var(--radius-full)",
+                padding: "4px",
+              }}
+            >
+              {(["signin", "signup"] as Mode[]).map((m) => (
                 <button
-                  type="button"
-                  onClick={handleForgotPassword}
+                  key={m}
+                  onClick={() => switchMode(m)}
                   style={{
-                    background: "none",
+                    flex: 1,
+                    padding: "8px",
+                    borderRadius: "var(--radius-full)",
                     border: "none",
-                    fontSize: "0.8rem",
-                    color: "var(--color-stone)",
+                    backgroundColor: mode === m ? "var(--color-white)" : "transparent",
+                    boxShadow: mode === m ? "var(--shadow-soft)" : "none",
                     fontFamily: "var(--font-body)",
+                    fontSize: "0.875rem",
+                    fontWeight: mode === m ? 500 : 400,
+                    color: mode === m ? "var(--color-soil)" : "var(--color-stone)",
                     cursor: "pointer",
-                    padding: 0,
-                    textDecoration: "underline",
-                    textUnderlineOffset: "2px",
+                    transition: "all 0.15s ease",
                   }}
                 >
-                  Forgot password?
+                  {m === "signin" ? "Sign in" : "Create account"}
                 </button>
-              </div>
-            )}
+              ))}
+            </div>
 
-            {/* Error / success messages */}
-            {error && (
-              <p
+            {/* Form */}
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {mode === "signup" && (
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
+                  style={inputStyle}
+                />
+              )}
+
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={inputStyle}
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={inputStyle}
+              />
+
+              {mode === "signup" && (
+                <input
+                  type="password"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  style={inputStyle}
+                />
+              )}
+
+              {/* Forgot password */}
+              {mode === "signin" && (
+                <div style={{ textAlign: "right" }}>
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      fontSize: "0.8rem",
+                      color: "var(--color-stone)",
+                      fontFamily: "var(--font-body)",
+                      cursor: "pointer",
+                      padding: 0,
+                      textDecoration: "underline",
+                      textUnderlineOffset: "2px",
+                    }}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+
+              {/* Error / success messages */}
+              {error && (
+                <p
+                  style={{
+                    fontSize: "0.85rem",
+                    color: "var(--color-error)",
+                    fontFamily: "var(--font-body)",
+                    margin: 0,
+                  }}
+                >
+                  {error}
+                </p>
+              )}
+              {resetSent && (
+                <p
+                  style={{
+                    fontSize: "0.85rem",
+                    color: "var(--color-sage)",
+                    fontFamily: "var(--font-body)",
+                    margin: 0,
+                  }}
+                >
+                  Reset email sent — check your inbox.
+                </p>
+              )}
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                disabled={loading}
                 style={{
-                  fontSize: "0.85rem",
-                  color: "var(--color-error)",
+                  padding: "12px",
+                  borderRadius: "var(--radius-full)",
+                  border: "none",
+                  backgroundColor: "var(--color-butter)",
+                  color: "var(--color-soil)",
                   fontFamily: "var(--font-body)",
-                  margin: 0,
+                  fontSize: "0.95rem",
+                  fontWeight: 500,
+                  cursor: loading ? "default" : "pointer",
+                  opacity: loading ? 0.6 : 1,
+                  marginTop: "4px",
+                  transition: "opacity 0.15s ease",
                 }}
               >
-                {error}
-              </p>
-            )}
-            {resetSent && (
-              <p
-                style={{
-                  fontSize: "0.85rem",
-                  color: "var(--color-sage)",
-                  fontFamily: "var(--font-body)",
-                  margin: 0,
-                }}
-              >
-                Reset email sent — check your inbox.
-              </p>
-            )}
+                {loading
+                  ? "..."
+                  : mode === "signin"
+                  ? "Sign in"
+                  : "Create account"}
+              </button>
+            </form>
 
-            {/* Submit button */}
+            {/* Divider */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                color: "var(--color-pebble)",
+                fontSize: "0.8rem",
+                fontFamily: "var(--font-body)",
+              }}
+            >
+              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(176, 168, 154, 0.3)" }} />
+              or
+              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(176, 168, 154, 0.3)" }} />
+            </div>
+
+            {/* Google sign-in */}
             <button
-              type="submit"
+              onClick={handleGoogleSignIn}
               disabled={loading}
               style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
                 padding: "12px",
                 borderRadius: "var(--radius-full)",
-                border: "none",
-                backgroundColor: "var(--color-butter)",
-                color: "var(--color-soil)",
+                border: "1px solid rgba(176, 168, 154, 0.4)",
+                backgroundColor: "var(--color-white)",
                 fontFamily: "var(--font-body)",
-                fontSize: "0.95rem",
-                fontWeight: 500,
+                fontSize: "0.9rem",
+                color: "var(--color-soil)",
                 cursor: loading ? "default" : "pointer",
                 opacity: loading ? 0.6 : 1,
-                marginTop: "4px",
                 transition: "opacity 0.15s ease",
               }}
             >
-              {loading
-                ? "..."
-                : mode === "signin"
-                ? "Sign in"
-                : "Create account"}
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                <path
+                  fill="#4285F4"
+                  d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
+                />
+              </svg>
+              Continue with Google
             </button>
-          </form>
-
-          {/* Divider */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              color: "var(--color-pebble)",
-              fontSize: "0.8rem",
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(176, 168, 154, 0.3)" }} />
-            or
-            <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(176, 168, 154, 0.3)" }} />
           </div>
-
-          {/* Google sign-in */}
-          <button
-            onClick={handleGoogleSignIn}
-            disabled={loading}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              padding: "12px",
-              borderRadius: "var(--radius-full)",
-              border: "1px solid rgba(176, 168, 154, 0.4)",
-              backgroundColor: "var(--color-white)",
-              fontFamily: "var(--font-body)",
-              fontSize: "0.9rem",
-              color: "var(--color-soil)",
-              cursor: loading ? "default" : "pointer",
-              opacity: loading ? 0.6 : 1,
-              transition: "opacity 0.15s ease",
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-              <path
-                fill="#4285F4"
-                d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"
-              />
-              <path
-                fill="#34A853"
-                d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
-              />
-              <path
-                fill="#EA4335"
-                d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
-              />
-            </svg>
-            Continue with Google
-          </button>
         </div>
       </div>
     </div>
