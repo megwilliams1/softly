@@ -51,10 +51,10 @@ export default function MoodCheckin({ uid }: { uid: string | null }) {
                 padding: "16px 12px",
                 borderRadius: "var(--radius-lg)",
                 backgroundColor: isSelected
-                  ? "var(--color-bloom-pink)"
+                  ? "var(--color-lavender)"
                   : "var(--color-white)",
                 border: isSelected
-                  ? "2px solid var(--color-blush-deep)"
+                  ? "2px solid var(--color-lavender)"
                   : "2px solid transparent",
                 boxShadow: isSelected ? "var(--shadow-card)" : "var(--shadow-soft)",
                 cursor: "pointer",
