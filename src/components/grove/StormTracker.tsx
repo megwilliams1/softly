@@ -69,6 +69,7 @@ export default function StormTracker({ uid }: Props) {
           color: "var(--color-lavender)",
           fontWeight: 600,
           marginBottom: "16px",
+          filter: "brightness(0.75)",
         }}
       >
         Storm Tracker

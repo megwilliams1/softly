@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { Flame } from "lucide-react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
+import { getSeason, seasonGreetings } from "@/lib/utils/season";
 import { useRecipes, type Recipe, type RecipeCategory } from "@/lib/hooks/useRecipes";
 import { isAdminUser } from "@/lib/admin";
 import RecipeCard from "@/components/hearth/RecipeCard";
 import SubmitRecipeModal from "@/components/hearth/SubmitRecipeModal";
 import RecipeDetailModal from "@/components/hearth/RecipeDetailModal";
 import EditRecipeModal from "@/components/hearth/EditRecipeModal";
+
+const greeting = seasonGreetings[getSeason()];
 
 const FILTER_OPTIONS: { value: RecipeCategory | "all"; label: string }[] = [
   { value: "all",       label: "All"       },
@@ -50,6 +53,20 @@ export default function HearthPage() {
           }}
         >
           <div>
+            <p
+              style={{
+                fontSize: "0.72rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                fontWeight: 600,
+                color: "var(--color-butter)",
+                fontFamily: "var(--font-body)",
+                marginBottom: "6px",
+                filter: "brightness(0.85)",
+              }}
+            >
+              {greeting}
+            </p>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
               <Flame size={28} style={{ color: "var(--color-butter)" }} />
               <h1

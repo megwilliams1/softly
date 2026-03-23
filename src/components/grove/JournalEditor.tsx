@@ -73,6 +73,7 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
             letterSpacing: "0.07em",
             color: "var(--color-lavender)",
             fontWeight: 600,
+            filter: "brightness(0.75)",
           }}
         >
           Today&rsquo;s entry

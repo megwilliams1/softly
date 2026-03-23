@@ -53,6 +53,7 @@ export default function TinyWinsVault({ uid }: Props) {
           letterSpacing: "0.07em",
           color: "var(--color-lavender)",
           fontWeight: 600,
+          filter: "brightness(0.75)",
         }}
       >
         Tiny Wins Vault

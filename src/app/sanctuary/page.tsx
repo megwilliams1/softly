@@ -75,6 +75,7 @@ export default function SanctuaryPage() {
         A soft space just for you.
       </p>
 
+      {/* Affirmation — emotional context first */}
       <section className="flex justify-center" style={{ marginBottom: "48px" }}>
         <DailyAffirmation />
       </section>
@@ -91,6 +92,7 @@ export default function SanctuaryPage() {
         </section>
       </div>
 
+      {/* Weekly summary */}
       <section className="flex justify-center">
         <WeeklyGardenSummary uid={uid} prominent={isSunday} />
       </section>

@@ -74,6 +74,7 @@ export default function SoftReset({ onDone }: Props) {
             letterSpacing: "0.1em",
             color: "var(--color-lavender)",
             fontWeight: 600,
+            filter: "brightness(0.75)",
             marginBottom: "24px",
           }}
         >
