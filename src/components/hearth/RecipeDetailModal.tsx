@@ -199,7 +199,7 @@ export default function RecipeDetailModal({ recipe, currentUser, isAdmin, onDele
                   </h3>
                   <ul style={{ paddingLeft: "20px", margin: 0 }}>
                     {recipe.ingredients.map((item, i) => (
-                      <li key={i} style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--color-shadow)", marginBottom: "4px" }}>
+                      <li key={i} style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--color-soil)", marginBottom: "4px" }}>
                         {item}
                       </li>
                     ))}
@@ -214,7 +214,7 @@ export default function RecipeDetailModal({ recipe, currentUser, isAdmin, onDele
                   </h3>
                   <ol style={{ paddingLeft: "20px", margin: 0 }}>
                     {recipe.instructions.map((step, i) => (
-                      <li key={i} style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--color-shadow)", marginBottom: "8px", lineHeight: 1.5 }}>
+                      <li key={i} style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--color-soil)", marginBottom: "8px", lineHeight: 1.5 }}>
                         {step}
                       </li>
                     ))}
