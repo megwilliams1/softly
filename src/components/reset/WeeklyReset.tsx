@@ -32,10 +32,10 @@ function ProgressDots({ current }: { current: number }) {
           style={{
             width: i + 1 === current ? "20px" : "8px",
             height: "8px",
-            borderRadius: "4px",
+            borderRadius: "var(--radius-sm)",
             backgroundColor:
               i + 1 <= current
-                ? "var(--color-bloom-pink)"
+                ? "var(--color-lavender)"
                 : "rgba(176, 168, 154, 0.3)",
             transition: "width 0.3s ease, background-color 0.3s ease",
           }}
@@ -157,7 +157,7 @@ export default function WeeklyReset({ uid }: { uid: string | null }) {
         style={{
           padding: "11px 28px",
           borderRadius: "var(--radius-full)",
-          backgroundColor: "var(--color-bloom-pink)",
+          backgroundColor: "var(--color-lavender)",
           color: "var(--color-soil)",
           fontFamily: "var(--font-body)",
           fontSize: "0.9rem",
@@ -191,8 +191,8 @@ export default function WeeklyReset({ uid }: { uid: string | null }) {
                 style={{
                   padding: "10px 16px",
                   borderRadius: "var(--radius-full)",
-                  backgroundColor: weekMood === label ? "var(--color-bloom-pink)" : "var(--color-white)",
-                  border: weekMood === label ? "2px solid var(--color-blush-deep)" : "2px solid rgba(176, 168, 154, 0.3)",
+                  backgroundColor: weekMood === label ? "var(--color-lavender)" : "var(--color-white)",
+                  border: weekMood === label ? "2px solid var(--color-lavender)" : "2px solid rgba(176, 168, 154, 0.3)",
                   color: "var(--color-soil)",
                   fontFamily: "var(--font-body)",
                   fontSize: "0.9rem",
@@ -329,7 +329,7 @@ export default function WeeklyReset({ uid }: { uid: string | null }) {
       {/* Step 5 — Affirmation */}
       {step === 5 && (
         <StepShell key={5}>
-          <p style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-sage)", fontWeight: 600 }}>
+          <p style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-lavender)", filter: "brightness(0.75)", fontWeight: 600 }}>
             Your affirmation for this week
           </p>
           <span style={{ fontSize: "2rem" }}>🌸</span>
