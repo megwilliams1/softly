@@ -8,7 +8,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Softly",
-  description: "A mom's weekly sanctuary app",
+  description: "A quiet little garden for your family life — plan, nourish, reflect, and grow.",
 };
 
 export default function RootLayout({
