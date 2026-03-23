@@ -42,7 +42,7 @@ export default function ConfirmDialog({
         className="animate-bloom-up"
         style={{
           backgroundColor: "var(--color-white)",
-          borderRadius: "20px",
+          borderRadius: "var(--radius-lg)",
           boxShadow: "var(--shadow-lift)",
           padding: "28px 24px",
           width: "100%",

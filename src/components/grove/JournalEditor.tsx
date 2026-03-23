@@ -71,8 +71,9 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
             fontSize: "0.65rem",
             textTransform: "uppercase",
             letterSpacing: "0.07em",
-            color: "var(--color-sage)",
+            color: "var(--color-lavender)",
             fontWeight: 600,
+            filter: "brightness(0.75)",
           }}
         >
           Today&rsquo;s entry
@@ -90,7 +91,7 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
         )}
         <div
           style={{
-            borderLeft: "3px solid var(--color-sage)",
+            borderLeft: "3px solid var(--color-lavender)",
             paddingLeft: "16px",
           }}
         >
@@ -151,9 +152,9 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
               style={{
                 padding: "6px 14px",
                 borderRadius: "var(--radius-full)",
-                backgroundColor: active ? "var(--color-sage)" : "transparent",
-                color: active ? "var(--color-white)" : "var(--color-stone)",
-                border: active ? "none" : "1.5px solid rgba(168,184,154,0.5)",
+                backgroundColor: active ? "var(--color-lavender)" : "transparent",
+                color: active ? "var(--color-soil)" : "var(--color-stone)",
+                border: active ? "none" : "1.5px solid rgba(212,197,226,0.5)",
                 fontFamily: "var(--font-body)",
                 fontSize: "0.8rem",
                 cursor: "pointer",
@@ -170,8 +171,8 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
       {isPromptMode && (
         <div
           style={{
-            backgroundColor: "rgba(168,184,154,0.1)",
-            borderLeft: "3px solid var(--color-sage)",
+            backgroundColor: "rgba(212,197,226,0.12)",
+            borderLeft: "3px solid var(--color-lavender)",
             borderRadius: "var(--radius-md)",
             padding: "14px 16px",
             display: "flex",
@@ -239,8 +240,8 @@ export default function JournalEditor({ uid, mood, onSaved }: Props) {
           alignSelf: "flex-end",
           padding: "10px 28px",
           borderRadius: "var(--radius-full)",
-          backgroundColor: "var(--color-sage)",
-          color: "var(--color-white)",
+          backgroundColor: "var(--color-lavender)",
+          color: "var(--color-soil)",
           fontFamily: "var(--font-body)",
           fontSize: "0.9rem",
           fontWeight: 500,

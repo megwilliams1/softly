@@ -72,8 +72,9 @@ export default function SoftReset({ onDone }: Props) {
             fontSize: "0.65rem",
             textTransform: "uppercase",
             letterSpacing: "0.1em",
-            color: "var(--color-sage)",
+            color: "var(--color-lavender)",
             fontWeight: 600,
+            filter: "brightness(0.75)",
             marginBottom: "24px",
           }}
         >
@@ -87,7 +88,7 @@ export default function SoftReset({ onDone }: Props) {
             height: "100px",
             borderRadius: "50%",
             backgroundColor: "var(--color-mist)",
-            border: "3px solid var(--color-sage)",
+            border: "3px solid var(--color-lavender)",
             margin: "0 auto 24px",
             animation: `soft-pulse ${step.duration / 1000}s ease-in-out infinite`,
           }}
