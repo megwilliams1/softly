@@ -73,7 +73,6 @@ export default function GrovePage() {
               gap: "28px",
             }}
           >
-            {/* Mood check-in */}
             <div>
               <h2
                 style={{
@@ -89,7 +88,6 @@ export default function GrovePage() {
               <MoodCheckin uid={uid} />
             </div>
 
-            {/* Enter button — only appears after mood is picked */}
             {todayMood && (
               <div className="animate-bloom-up" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <p style={{ fontSize: "0.95rem", color: "var(--color-stone)" }}>

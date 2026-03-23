@@ -80,7 +80,6 @@ export default function SanctuaryPage() {
         <DailyAffirmation />
       </section>
 
-      {/* Gratitude (left) + Self-Care (right) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8" style={{ marginBottom: "48px" }}>
         <section>
           <SectionTitle sub="Three things, however small.">Gratitude</SectionTitle>
