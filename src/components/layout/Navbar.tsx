@@ -2,22 +2,20 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Sprout, Sparkles, Flame, Sun, Moon, LogOut, ShieldCheck, Leaf } from "lucide-react";
+import { Sprout, Sparkles, Flame, Sun, Moon, LogOut, ShieldCheck, Leaf, RefreshCw } from "lucide-react";
 import { useTheme } from "@/lib/hooks/useTheme";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useIsAdmin } from "@/lib/hooks/useIsAdmin";
 import UserAvatar from "@/components/shared/UserAvatar";
 
 const links = [
-  { href: "/garden",    label: "The Garden",       icon: Sprout   },
-  { href: "/sanctuary", label: "The Sanctuary",    icon: Sparkles },
-  { href: "/hearth",    label: "The Hearth",       icon: Flame    },
-  { href: "/grove",     label: "Reflection Grove", icon: Leaf     },
+  { href: "/garden",    label: "The Garden",       icon: Sprout    },
+  { href: "/sanctuary", label: "The Sanctuary",    icon: Sparkles  },
+  { href: "/hearth",    label: "The Hearth",       icon: Flame     },
+  { href: "/grove",     label: "Reflection Grove", icon: Leaf      },
+  { href: "/reset",     label: "Weekly Reset",     icon: RefreshCw },
 ];
 
-function isSunday() {
-  return new Date().getDay() === 0;
-}
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -59,24 +57,7 @@ export default function Navbar() {
           {/* Only show section links when signed in */}
           {!loading && user && (
             <>
-              {isSunday() && (
-                <Link
-                  href="/reset"
-                  style={{
-                    fontSize: "0.8rem",
-                    fontFamily: "var(--font-body)",
-                    color: "var(--color-moss)",
-                    backgroundColor: "var(--color-mist)",
-                    padding: "5px 12px",
-                    borderRadius: "var(--radius-full)",
-                    textDecoration: "none",
-                    border: "1px solid rgba(168, 184, 154, 0.4)",
-                  }}
-                >
-                  Time to reset 🌿
-                </Link>
-              )}
-              {links.map(({ href, label, icon: Icon }) => {
+{links.map(({ href, label, icon: Icon }) => {
                 const isActive = pathname.startsWith(href);
                 return (
                   <Link
