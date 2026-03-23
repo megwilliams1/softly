@@ -107,7 +107,7 @@ export default function AccountPage() {
           Your Account
         </h1>
         <p style={{ color: "var(--color-stone)", fontFamily: "var(--font-body)", marginBottom: "36px" }}>
-          Update your profile info.
+          A little corner just for you.
         </p>
 
         {/* Avatar preview */}
