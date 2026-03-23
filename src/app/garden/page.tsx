@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { getSeason, seasonGreetings } from "@/lib/utils/season";
 import MealGrid from "@/components/garden/MealGrid";
@@ -7,6 +8,7 @@ import ActivityScheduler from "@/components/garden/ActivityScheduler";
 import Checklist from "@/components/garden/Checklist";
 import GoalCard from "@/components/garden/GoalCard";
 import DueNotesBanner from "@/components/grove/DueNotesBanner";
+import WelcomeModal from "@/components/shared/WelcomeModal";
 
 const season = getSeason();
 const greeting = seasonGreetings[season];
@@ -33,6 +35,13 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 export default function GardenPage() {
   const { user, loading } = useRequireAuth();
   const uid = user?.uid ?? null;
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    if (user && !localStorage.getItem("softly_welcomed")) {
+      setShowWelcome(true);
+    }
+  }, [user]);
 
   if (loading || !user) return null;
 
@@ -41,6 +50,13 @@ export default function GardenPage() {
       className="min-h-screen px-6 py-10"
       style={{ backgroundColor: "var(--color-mist)" }}
     >
+      {showWelcome && (
+        <WelcomeModal
+          displayName={user.displayName}
+          onClose={() => setShowWelcome(false)}
+        />
+      )}
+
       <p
         style={{
           fontSize: "0.72rem",
