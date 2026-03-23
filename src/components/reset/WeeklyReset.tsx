@@ -329,7 +329,7 @@ export default function WeeklyReset({ uid }: { uid: string | null }) {
       {/* Step 5 — Affirmation */}
       {step === 5 && (
         <StepShell key={5}>
-          <p style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-lavender)", filter: "brightness(0.75)", fontWeight: 600 }}>
+          <p style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-lavender-label)", fontWeight: 600 }}>
             Your affirmation for this week
           </p>
           <span style={{ fontSize: "2rem" }}>🌸</span>

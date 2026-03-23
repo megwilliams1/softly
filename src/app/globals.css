@@ -13,6 +13,7 @@
   --color-sage: #a8b89a;
   --color-butter: #f7e6b0;
   --color-lavender: #d4c5e2;
+  --color-lavender-label: #9585b0;
 
   /* Rich Tones */
   --color-soil: #6b4f3a;
@@ -62,6 +63,7 @@
   --color-sage: #7a9a6c;
   --color-butter: #b89830;
   --color-lavender: #9080b8;
+  --color-lavender-label: #c4b4d8;
 
   /* Rich Tones — inverted for dark */
   --color-soil: #e8ddd4;

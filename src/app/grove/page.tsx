@@ -36,10 +36,9 @@ export default function GrovePage() {
             textTransform: "uppercase",
             letterSpacing: "0.12em",
             fontWeight: 600,
-            color: "var(--color-lavender)",
+            color: "var(--color-lavender-label)",
             fontFamily: "var(--font-body)",
             marginBottom: "6px",
-            filter: "brightness(0.75)",
           }}
         >
           {greeting}
