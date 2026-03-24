@@ -80,7 +80,8 @@ function Initials({ name, size = 36 }: { name: string | null; size?: number }) {
 }
 
 function Avatar({ profile, size = 36 }: { profile: UserProfile; size?: number }) {
-  if (profile.photoURL) {
+  const [imgError, setImgError] = useState(false);
+  if (profile.photoURL && !imgError) {
     return (
       <img
         src={profile.photoURL}
@@ -88,6 +89,7 @@ function Avatar({ profile, size = 36 }: { profile: UserProfile; size?: number })
         width={size}
         height={size}
         style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+        onError={() => setImgError(true)}
       />
     );
   }
