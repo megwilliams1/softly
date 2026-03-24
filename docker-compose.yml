@@ -1,5 +1,8 @@
 services:
   softly:
+    # On Windows: run ./docker-build.sh first, then docker compose up
+    # On Linux/Mac: docker compose up --build works directly
+    image: softly:latest
     build:
       context: .
       dockerfile: Dockerfile
