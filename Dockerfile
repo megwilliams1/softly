@@ -2,12 +2,24 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 
+# Upgrade Alpine packages to pull patched zlib (CVE-2026-22184, CVE-2026-27171)
+RUN apk upgrade --no-cache
+
+# Upgrade npm to fix CVEs in npm-bundled tar, minimatch, cross-spawn, glob
+RUN npm install -g npm@11.12.0
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
 # ─── Stage 2: Build the app ───────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
+
+# Upgrade Alpine packages to pull patched zlib (CVE-2026-22184, CVE-2026-27171)
+RUN apk upgrade --no-cache
+
+# Upgrade npm to fix CVEs in npm-bundled tar, minimatch, cross-spawn, glob
+RUN npm install -g npm@11.12.0
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -34,6 +46,12 @@ RUN npm run build
 # ─── Stage 3: Production runner ───────────────────────────
 FROM node:20-alpine AS runner
 WORKDIR /app
+
+# Upgrade Alpine packages to pull patched zlib (CVE-2026-22184, CVE-2026-27171)
+RUN apk upgrade --no-cache
+
+# Upgrade npm to fix CVEs in npm-bundled tar, minimatch, cross-spawn, glob
+RUN npm install -g npm@11.12.0
 
 ENV NODE_ENV=production
 
