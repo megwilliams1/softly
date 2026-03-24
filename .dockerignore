@@ -1,0 +1,13 @@
+# Exclude everything by default, then allow only what the build needs
+*
+
+!src
+!src/**
+!public
+!public/**
+!package.json
+!package-lock.json
+!next.config.ts
+!tsconfig.json
+!postcss.config.mjs
+!eslint.config.mjs
