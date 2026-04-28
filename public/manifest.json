@@ -1,0 +1,24 @@
+{
+  "name": "Softly",
+  "short_name": "Softly",
+  "description": "A quiet little garden for your family life — plan, nourish, reflect, and grow.",
+  "start_url": "/home",
+  "display": "standalone",
+  "background_color": "#faf6f0",
+  "theme_color": "#6b4f3a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
