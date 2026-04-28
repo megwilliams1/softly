@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && user) router.replace("/garden");
+    if (!loading && user) router.replace("/home");
   }, [user, loading, router]);
 
   if (loading) return null;

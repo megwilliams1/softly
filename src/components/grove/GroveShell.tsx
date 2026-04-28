@@ -14,7 +14,7 @@ export const MOOD_THEME: Record<MoodKey | "none", ThemeEntry> = {
   okay:    { bg: "#F0F5F0", accent: "#A8B89A", particleType: "wind"   },
   low:     { bg: "#F0F3F7", accent: "#9BA8B5", particleType: "drops"  },
   drained: { bg: "#F5F0EE", accent: "#B09080", particleType: "fade"   },
-  none:    { bg: "var(--color-cream)", accent: "var(--color-sage)", particleType: null },
+  none:    { bg: "#fce8f0", accent: "var(--color-grove-accent)", particleType: null },
 };
 
 const MOOD_THEME_DARK: Record<MoodKey | "none", ThemeEntry> = {
@@ -39,7 +39,7 @@ export default function GroveShell({ mood, children }: Props) {
       style={{
         backgroundColor: activeTheme.bg,
         transition: "background-color 0.8s ease",
-        minHeight: "100vh",
+        minHeight: "100%",
         position: "relative",
       }}
     >

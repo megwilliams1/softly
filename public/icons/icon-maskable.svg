@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Solid background (maskable — fills entire canvas) -->
+  <rect width="512" height="512" fill="#6b4f3a"/>
+  <!-- Stem -->
+  <line x1="256" y1="370" x2="256" y2="205" stroke="#faf6f0" stroke-width="16" stroke-linecap="round"/>
+  <!-- Left leaf -->
+  <path d="M256 308 C 238 288 200 292 194 315 C 188 338 222 347 256 335 Z" fill="#a8b89a"/>
+  <!-- Right leaf -->
+  <path d="M256 265 C 274 245 312 249 318 272 C 324 295 290 304 256 292 Z" fill="#a8b89a"/>
+  <!-- Top leaf -->
+  <path d="M256 210 C 235 188 200 193 195 216 C 190 239 222 250 256 240 C 290 250 322 239 317 216 C 312 193 277 188 256 210 Z" fill="#faf6f0"/>
+</svg>

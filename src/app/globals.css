@@ -7,6 +7,21 @@
   --color-cream: #faf6f0;
   --color-mist: #e8efe8;
   --color-white: #ffffff;
+  --color-sidebar: #f3ede5;
+
+  /* Section Tile Backgrounds */
+  --color-garden-tile:    #e4eddf;
+  --color-sanctuary-tile: #fde6ec;
+  --color-hearth-tile:    #fdf3de;
+  --color-grove-tile:     #ede6f7;
+  --color-reset-tile:     #e4ecf5;
+
+  /* Section Accent Colors */
+  --color-garden-accent:    #5c6b50;
+  --color-sanctuary-accent: #c4788a;
+  --color-hearth-accent:    #8a7040;
+  --color-grove-accent:     #9080c0;
+  --color-reset-accent:     #4a789a;
 
   /* Primary Palette */
   --color-bloom-pink: #f2c4ce;
@@ -33,13 +48,14 @@
   /* Border Radius */
   --radius-sm: 8px;
   --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-lg: 22px;
+  --radius-xl: 26px;
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-soft: 0 2px 12px rgba(107, 79, 58, 0.08);
-  --shadow-card: 0 4px 20px rgba(107, 79, 58, 0.1);
-  --shadow-lift: 0 8px 30px rgba(107, 79, 58, 0.14);
+  --shadow-soft: 0 1px 10px rgba(107, 79, 58, 0.06);
+  --shadow-card: 0 2px 20px rgba(107, 79, 58, 0.09);
+  --shadow-lift: 0 8px 36px rgba(107, 79, 58, 0.14);
 
   /* Typography */
   --font-display: "Cormorant Garamond", Georgia, serif;
@@ -57,6 +73,21 @@
   --color-cream: #1c1814;
   --color-mist: #1a1f1a;
   --color-white: #2c2723;
+  --color-sidebar: #252018;
+
+  /* Section Tile Backgrounds — dark, hue-tinted */
+  --color-garden-tile:    #1e2a1c;
+  --color-sanctuary-tile: #2a1c20;
+  --color-hearth-tile:    #28220e;
+  --color-grove-tile:     #1e1828;
+  --color-reset-tile:     #161e2a;
+
+  /* Section Accent Colors — brightened for dark bg legibility */
+  --color-garden-accent:    #7a9a6c;
+  --color-sanctuary-accent: #c47888;
+  --color-hearth-accent:    #b09050;
+  --color-grove-accent:     #a090d0;
+  --color-reset-accent:     #6a98ba;
 
   /* Primary Palette — warm-adjusted for dark */
   --color-bloom-pink: #c47888;
@@ -182,4 +213,13 @@ button {
 input,
 textarea {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* ─── Petal Rain Animation ────────────────────────────── */
+@keyframes petalDrift {
+  0%   { transform: translateY(-40px) rotate(0deg) translateX(0); opacity: 0; }
+  5%   { opacity: 0.85; }
+  50%  { transform: translateY(50vh) rotate(220deg) translateX(30px); }
+  95%  { opacity: 0.6; }
+  100% { transform: translateY(110vh) rotate(480deg) translateX(-20px); opacity: 0; }
 }

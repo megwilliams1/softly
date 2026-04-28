@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
 import SeasonalBackground from "@/components/shared/SeasonalBackground";
 import InAppBrowserGate from "@/components/shared/InAppBrowserGate";
 import ClientLayout from "@/components/shared/ClientLayout";
@@ -9,6 +8,12 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Softly",
   description: "A quiet little garden for your family life — plan, nourish, reflect, and grow.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Softly",
+  },
 };
 
 export default function RootLayout({
@@ -30,15 +35,16 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
           rel="stylesheet"
         />
+        <meta name="theme-color" content="#6b4f3a" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <link rel="apple-touch-icon" href="/icons/icon-maskable.svg" />
       </head>
       <body>
         <InAppBrowserGate>
           <SeasonalBackground />
           <ClientLayout>
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <Navbar />
-              {children}
-            </div>
+            {children}
           </ClientLayout>
         </InAppBrowserGate>
       </body>
