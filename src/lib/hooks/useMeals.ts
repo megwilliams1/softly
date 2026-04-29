@@ -21,7 +21,7 @@ function emptyMeals(): MealsData {
 }
 
 /** Deep-merge Firestore data onto the empty template so every day always has all three meal times. */
-function mergeMeals(data: Partial<MealsData>): MealsData {
+export function mergeMeals(data: Partial<MealsData>): MealsData {
   const base = emptyMeals();
   for (const day of DAYS) {
     if (data[day]) {
@@ -33,6 +33,13 @@ function mergeMeals(data: Partial<MealsData>): MealsData {
     }
   }
   return base;
+}
+
+function currentWeekKey(): string {
+  const d = new Date();
+  const sunday = new Date(d);
+  sunday.setDate(d.getDate() - d.getDay());
+  return sunday.toISOString().split("T")[0];
 }
 
 export function useMeals(uid: string | null) {
@@ -53,18 +60,26 @@ export function useMeals(uid: string | null) {
 
   async function setMeal(day: DayKey, time: MealTime, value: string) {
     if (!uid) return;
-    const ref = doc(db, "users", uid, "meals", "current");
-    // Use dot notation with updateDoc so only the specific meal time field
-    // is updated, not the entire day object (which would wipe sibling meals).
+    const weekKey = currentWeekKey();
+    const currentRef = doc(db, "users", uid, "meals", "current");
+    const archiveRef = doc(db, "users", uid, "meals", weekKey);
     try {
-      await updateDoc(ref, { [`${day}.${time}`]: value });
+      await updateDoc(currentRef, { [`${day}.${time}`]: value });
+      await updateDoc(archiveRef, { [`${day}.${time}`]: value });
     } catch {
-      // Document doesn't exist yet — create it with the full template.
       const base = emptyMeals();
       base[day][time] = value;
-      await setDoc(ref, base);
+      await setDoc(currentRef, base);
+      await setDoc(archiveRef, base);
     }
   }
 
-  return { meals, setMeal };
+  async function copyWeekToCurrents(data: MealsData) {
+    if (!uid) return;
+    const weekKey = currentWeekKey();
+    await setDoc(doc(db, "users", uid, "meals", "current"), data);
+    await setDoc(doc(db, "users", uid, "meals", weekKey), data);
+  }
+
+  return { meals, setMeal, copyWeekToCurrent: copyWeekToCurrents };
 }
