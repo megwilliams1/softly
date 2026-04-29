@@ -40,6 +40,8 @@ export function useWeeklyReset(uid: string | null) {
 
   const weekKey = thisWeekSunday();
   const thisWeekDone = history.some((e) => e.weekKey === weekKey);
+  const pastEntries = [...history]
+    .sort((a, b) => b.weekKey.localeCompare(a.weekKey));
 
   async function saveReset(weekMood: string, intention: string) {
     if (!uid) return;
@@ -51,8 +53,6 @@ export function useWeeklyReset(uid: string | null) {
     };
     await setDoc(doc(db, "users", uid, "weeklyResets", weekKey), entry);
   }
-
-  const pastEntries = [...history].sort((a, b) => b.weekKey.localeCompare(a.weekKey));
 
   return { thisWeekDone, saveReset, pastEntries };
 }
