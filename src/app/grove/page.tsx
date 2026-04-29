@@ -12,7 +12,6 @@ import PastEntries from "@/components/grove/PastEntries";
 import StormTracker from "@/components/grove/StormTracker";
 import FutureNoteSection from "@/components/grove/FutureNoteSection";
 import TinyWinsVault from "@/components/grove/TinyWinsVault";
-import PetalRain from "@/components/grove/PetalRain";
 import Sprig from "@/components/shared/Sprig";
 
 export default function GrovePage() {
@@ -30,8 +29,6 @@ export default function GrovePage() {
 
   return (
     <GroveShell mood={shellMood}>
-      <PetalRain />
-
       <main className="px-6 py-10" style={{ maxWidth: "900px", margin: "0 auto", position: "relative" }}>
         {/* Botanical sprig — top left */}
         <Sprig

@@ -15,7 +15,8 @@ export type Reminder = {
   id: string;
   text: string;
   emoji: string;
-  doneDate: string | null; // YYYY-MM-DD if done today, null otherwise
+  time: string | null;     // HH:MM (24h) — optional daily notification time
+  doneDate: string | null; // YYYY-MM-DD if done today
 };
 
 export function todayKey(): string {
@@ -36,13 +37,19 @@ export function useReminders(uid: string | null) {
     return unsubscribe;
   }, [uid]);
 
-  async function addReminder(text: string, emoji: string) {
+  async function addReminder(text: string, emoji: string, time: string | null = null) {
     if (!uid) return;
     await addDoc(collection(db, "users", uid, "reminders"), {
       text,
       emoji,
+      time,
       doneDate: null,
     });
+  }
+
+  async function setReminderTime(id: string, time: string | null) {
+    if (!uid) return;
+    await updateDoc(doc(db, "users", uid, "reminders", id), { time });
   }
 
   async function toggleDone(id: string) {
@@ -60,5 +67,5 @@ export function useReminders(uid: string | null) {
     await deleteDoc(doc(db, "users", uid, "reminders", id));
   }
 
-  return { reminders, addReminder, toggleDone, deleteReminder };
+  return { reminders, addReminder, toggleDone, deleteReminder, setReminderTime };
 }

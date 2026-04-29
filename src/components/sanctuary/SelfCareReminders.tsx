@@ -2,28 +2,83 @@
 
 import { useState } from "react";
 import { useReminders, todayKey } from "@/lib/hooks/useReminders";
+import { useReminderNotifications, requestNotificationPermission } from "@/lib/hooks/useReminderNotifications";
 
 export default function SelfCareReminders({ uid }: { uid: string | null }) {
-  const { reminders, addReminder, toggleDone, deleteReminder } = useReminders(uid);
+  const { reminders, addReminder, toggleDone, deleteReminder, setReminderTime } = useReminders(uid);
   const [text, setText] = useState("");
   const [emoji, setEmoji] = useState("");
+  const [time, setTime] = useState("");
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission>(
+    typeof window !== "undefined" && "Notification" in window
+      ? Notification.permission
+      : "default"
+  );
+
+  useReminderNotifications(reminders);
 
   const today = todayKey();
 
   function handleAdd() {
     if (!text.trim()) return;
-    addReminder(text.trim(), emoji.trim());
+    addReminder(text.trim(), emoji.trim(), time || null);
     setText("");
     setEmoji("");
+    setTime("");
+  }
+
+  async function handleRequestPermission() {
+    const granted = await requestNotificationPermission();
+    setNotifPermission(granted ? "granted" : "denied");
   }
 
   const active = reminders.filter((r) => r.doneDate !== today);
   const done = reminders.filter((r) => r.doneDate === today);
   const sorted = [...active, ...done];
+  const hasTimedReminders = reminders.some((r) => r.time);
 
   return (
     <div style={{ maxWidth: "600px" }}>
+
+      {/* Notification permission prompt */}
+      {hasTimedReminders && notifPermission === "default" && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "12px",
+            backgroundColor: "var(--color-white)",
+            border: "1.5px solid var(--color-bloom-pink)",
+            borderRadius: "var(--radius-md)",
+            padding: "10px 14px",
+            marginBottom: "20px",
+            flexWrap: "wrap",
+          }}
+        >
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-soil)", margin: 0 }}>
+            🔔 Allow notifications so Softly can remind you at the right time.
+          </p>
+          <button
+            onClick={handleRequestPermission}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "var(--radius-full)",
+              backgroundColor: "var(--color-bloom-pink)",
+              color: "var(--color-soil)",
+              border: "none",
+              fontFamily: "var(--font-body)",
+              fontSize: "0.82rem",
+              fontWeight: 500,
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            Allow
+          </button>
+        </div>
+      )}
 
       {/* Card grid */}
       {sorted.length > 0 && (
@@ -60,14 +115,10 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
                   cursor: "default",
                 }}
               >
-                {/* Emoji */}
                 {reminder.emoji && (
-                  <span style={{ fontSize: "1.8rem", lineHeight: 1 }}>
-                    {reminder.emoji}
-                  </span>
+                  <span style={{ fontSize: "1.8rem", lineHeight: 1 }}>{reminder.emoji}</span>
                 )}
 
-                {/* Text */}
                 <p
                   style={{
                     fontSize: "0.875rem",
@@ -82,8 +133,26 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
                   {reminder.text}
                 </p>
 
-                {/* Actions */}
-                <div style={{ display: "flex", gap: "6px", marginTop: "4px" }}>
+                {/* Time picker inline */}
+                <input
+                  type="time"
+                  value={reminder.time ?? ""}
+                  onChange={(e) => setReminderTime(reminder.id, e.target.value || null)}
+                  aria-label="Reminder time"
+                  style={{
+                    fontSize: "0.72rem",
+                    color: reminder.time ? "var(--color-sanctuary-accent)" : "var(--color-pebble)",
+                    border: "none",
+                    background: "transparent",
+                    fontFamily: "var(--font-body)",
+                    cursor: "pointer",
+                    outline: "none",
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                />
+
+                <div style={{ display: "flex", gap: "6px", marginTop: "2px" }}>
                   <button
                     onClick={() => toggleDone(reminder.id)}
                     aria-pressed={isDone}
@@ -92,12 +161,8 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
                       fontSize: "0.75rem",
                       padding: "4px 10px",
                       borderRadius: "var(--radius-full)",
-                      backgroundColor: isDone
-                        ? "transparent"
-                        : "var(--color-bloom-pink)",
-                      border: isDone
-                        ? "1px solid rgba(176, 168, 154, 0.4)"
-                        : "none",
+                      backgroundColor: isDone ? "transparent" : "var(--color-bloom-pink)",
+                      border: isDone ? "1px solid rgba(176, 168, 154, 0.4)" : "none",
                       color: "var(--color-soil)",
                       fontFamily: "var(--font-body)",
                       cursor: "pointer",
@@ -105,7 +170,6 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
                   >
                     {isDone ? "Undo" : "✓ Done"}
                   </button>
-
                   <button
                     onClick={() => deleteReminder(reminder.id)}
                     aria-label={`Delete "${reminder.text}"`}
@@ -129,7 +193,6 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
         </div>
       )}
 
-      {/* Empty state */}
       {reminders.length === 0 && (
         <p style={{ fontSize: "0.875rem", color: "var(--color-pebble)", marginBottom: "20px" }}>
           Add a few reminders for small acts of care — just for you.
@@ -137,7 +200,7 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
       )}
 
       {/* Add form */}
-      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
         <input
           type="text"
           placeholder="🌿"
@@ -164,6 +227,7 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
           onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
           style={{
             flex: 1,
+            minWidth: "160px",
             padding: "10px 14px",
             borderRadius: "var(--radius-md)",
             border: "1px solid rgba(176, 168, 154, 0.4)",
@@ -172,6 +236,24 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
             color: "var(--color-soil)",
             backgroundColor: "var(--color-white)",
             outline: "none",
+          }}
+        />
+        <input
+          type="time"
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+          aria-label="Reminder time (optional)"
+          title="Optional — get notified at this time"
+          style={{
+            padding: "10px 10px",
+            borderRadius: "var(--radius-md)",
+            border: "1px solid rgba(176, 168, 154, 0.4)",
+            fontSize: "0.85rem",
+            fontFamily: "var(--font-body)",
+            color: time ? "var(--color-soil)" : "var(--color-pebble)",
+            backgroundColor: "var(--color-white)",
+            outline: "none",
+            flexShrink: 0,
           }}
         />
         <button
@@ -192,6 +274,9 @@ export default function SelfCareReminders({ uid }: { uid: string | null }) {
           Add
         </button>
       </div>
+      <p style={{ marginTop: "8px", fontSize: "0.75rem", color: "var(--color-pebble)", fontFamily: "var(--font-body)" }}>
+        Set a time to get a notification reminder (while the app is open).
+      </p>
     </div>
   );
 }

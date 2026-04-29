@@ -1,6 +1,12 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+  type Firestore,
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -25,7 +31,23 @@ if (typeof window !== "undefined") {
   }
 }
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const isNewApp = !getApps().length;
+const app = isNewApp ? initializeApp(firebaseConfig) : getApp();
+
+// Enable IndexedDB offline persistence on first init; subsequent HMR reloads use getFirestore
+let db: Firestore;
+try {
+  db = isNewApp
+    ? initializeFirestore(app, {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        }),
+      })
+    : getFirestore(app);
+} catch {
+  db = getFirestore(app);
+}
+
+export { db };
 export const auth    = getAuth(app);
-export const db      = getFirestore(app);
 export const storage = getStorage(app);

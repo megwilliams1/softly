@@ -1,15 +1,17 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import MealGrid, { MealGridHandle } from "@/components/garden/MealGrid";
-import { DayKey } from "@/lib/hooks/useMeals";
+import { DayKey, useMeals } from "@/lib/hooks/useMeals";
+import { useMealHistory } from "@/lib/hooks/useMealHistory";
 import PageSkeleton from "@/components/shared/PageSkeleton";
 import ActivityScheduler from "@/components/garden/ActivityScheduler";
 import Checklist from "@/components/garden/Checklist";
 import GoalCard from "@/components/garden/GoalCard";
 import DueNotesBanner from "@/components/grove/DueNotesBanner";
 import Sprig from "@/components/shared/Sprig";
+import MealHistoryModal from "@/components/garden/MealHistoryModal";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -31,11 +33,30 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 export default function GardenPage() {
   const { user, loading } = useRequireAuth();
   const uid = user?.uid ?? null;
+  const { copyWeekToCurrent } = useMeals(uid);
+  const { history } = useMealHistory(uid);
+  const [showHistory, setShowHistory] = useState(false);
   const mealRef = useRef<HTMLElement>(null);
   const mealGridRef = useRef<MealGridHandle>(null);
+  const activitiesRef = useRef<HTMLElement>(null);
+  const checklistRef = useRef<HTMLElement>(null);
 
   const DAY_KEYS: DayKey[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const todayKey = DAY_KEYS[new Date().getDay()];
+
+  useEffect(() => {
+    if (!user) return;
+    const hash = window.location.hash.slice(1);
+    const map: Record<string, React.RefObject<HTMLElement | null>> = {
+      meals: mealRef,
+      activities: activitiesRef,
+      checklist: checklistRef,
+    };
+    const target = map[hash];
+    if (target?.current) {
+      setTimeout(() => target.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    }
+  }, [user]);
 
   if (loading) return <PageSkeleton />;
   if (!user) return null;
@@ -115,18 +136,32 @@ export default function GardenPage() {
         <DueNotesBanner uid={uid} />
 
         <section ref={mealRef} style={{ marginBottom: "48px" }}>
-          <div style={{ marginBottom: "20px" }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "20px" }}>
             <SectionTitle>Meal Planner</SectionTitle>
+            {history.length > 0 && (
+              <button
+                onClick={() => setShowHistory(true)}
+                style={{
+                  background: "none", border: "none", cursor: "pointer",
+                  fontFamily: "var(--font-body)", fontSize: "12px",
+                  color: "var(--color-garden-accent)", fontWeight: 500,
+                  textDecoration: "underline", textUnderlineOffset: "3px",
+                  padding: 0, flexShrink: 0,
+                }}
+              >
+                Past weeks
+              </button>
+            )}
           </div>
           <MealGrid ref={mealGridRef} uid={uid} />
         </section>
 
-        <section style={{ marginBottom: "48px" }}>
+        <section ref={activitiesRef} style={{ marginBottom: "48px" }}>
           <SectionTitle>Kids&rsquo; Activities</SectionTitle>
           <ActivityScheduler uid={uid} />
         </section>
 
-        <section style={{ marginBottom: "48px" }}>
+        <section ref={checklistRef} style={{ marginBottom: "48px" }}>
           <SectionTitle>Shopping &amp; Errands</SectionTitle>
           <Checklist uid={uid} />
         </section>
@@ -135,6 +170,14 @@ export default function GardenPage() {
           <GoalCard uid={uid} />
         </section>
       </div>
+
+      {showHistory && (
+        <MealHistoryModal
+          history={history}
+          onCopy={copyWeekToCurrent}
+          onClose={() => setShowHistory(false)}
+        />
+      )}
     </main>
   );
 }

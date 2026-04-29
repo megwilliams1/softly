@@ -71,6 +71,10 @@ const PARTICLE_ANIMATION: Record<Season, string> = {
 
 export default function SeasonalBackground() {
   const season = getSeason();
+  const particles = PARTICLES[season];
+  const emoji = PARTICLE_EMOJI[season];
+  const animation = PARTICLE_ANIMATION[season];
+  const floatsUp = season === "summer";
 
   return (
     <div
@@ -86,6 +90,28 @@ export default function SeasonalBackground() {
         className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full opacity-30 blur-3xl"
         style={{ backgroundColor: `var(--color-seasonal-secondary)` }}
       />
+
+      {particles.map((p, i) => (
+        <span
+          key={i}
+          style={{
+            position: "absolute",
+            left: `${p.left}%`,
+            ...(floatsUp ? { bottom: 0 } : { top: 0 }),
+            fontSize: `${p.size}px`,
+            animationName: animation,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+            animationIterationCount: "infinite",
+            animationTimingFunction: "linear",
+            animationFillMode: "both",
+            opacity: 0.55,
+            willChange: "transform",
+          }}
+        >
+          {emoji}
+        </span>
+      ))}
     </div>
   );
 }

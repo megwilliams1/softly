@@ -13,6 +13,7 @@ import affirmations from "@/data/affirmations.json";
 import Link from "next/link";
 import WelcomeModal from "@/components/shared/WelcomeModal";
 import PageSkeleton from "@/components/shared/PageSkeleton";
+import DueNotesBanner from "@/components/grove/DueNotesBanner";
 
 const DAY_KEYS: DayKey[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
@@ -118,6 +119,7 @@ export default function HomePage() {
   const { activeGoal, checkedInToday, checkIn } = useGoals(uid);
   const { data: checklist } = useChecklist(uid);
   const { daysShown, gratitudeCount, summaryLines } = useWeeklySummary(uid);
+  const [copied, setCopied] = useState(false);
   const { todayMood } = useMood(uid);
   const { todayEntry } = useJournal(uid);
 
@@ -141,6 +143,28 @@ export default function HomePage() {
   const allItems = [...checklist.groceries, ...checklist.errands].slice(0, 6);
 
   const weekNum = Math.ceil(getDayOfYear() / 7);
+
+  function shareSummary() {
+    const text = [
+      `🌸 My week in Softly — Week ${weekNum}`,
+      "",
+      summaryLines.headline,
+      "",
+      summaryLines.presence,
+      summaryLines.gratitude,
+      "",
+      summaryLines.closing,
+    ].join("\n");
+
+    if (navigator.share) {
+      navigator.share({ title: "My week in Softly", text }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    }
+  }
 
   return (
     <div
@@ -181,6 +205,8 @@ export default function HomePage() {
           {formatDateFull()} · Your garden is growing beautifully.
         </p>
       </div>
+
+      <DueNotesBanner uid={uid} />
 
       {/* Main grid */}
       <div
@@ -506,7 +532,7 @@ export default function HomePage() {
           >
             {summaryLines.headline}
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
             <div>
               <p style={{ fontFamily: "var(--font-display)", fontSize: "28px", color: "var(--color-soil)", lineHeight: 1 }}>
                 {daysShown}/7
@@ -524,6 +550,22 @@ export default function HomePage() {
               </p>
             </div>
           </div>
+          <button
+            onClick={(e) => { e.preventDefault(); shareSummary(); }}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "var(--radius-full)",
+              backgroundColor: "rgba(255,255,255,0.6)",
+              border: "1px solid rgba(176,168,154,0.3)",
+              color: "var(--color-stone)",
+              fontFamily: "var(--font-body)",
+              fontSize: "11px",
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+          >
+            {copied ? "✓ Copied!" : "Share this week"}
+          </button>
         </Link>
       </div>
     </div>

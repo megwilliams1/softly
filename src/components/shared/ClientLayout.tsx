@@ -18,6 +18,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
   }, []);
 
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+  }, []);
+
   function handleSplashComplete() {
     sessionStorage.setItem("softly:splashed", "1");
     setShowSplash(false);
