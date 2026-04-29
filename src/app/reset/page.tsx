@@ -1,12 +1,15 @@
 "use client";
 
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
+import { useWeeklyReset } from "@/lib/hooks/useWeeklyReset";
 import WeeklyReset from "@/components/reset/WeeklyReset";
+import ResetHistory from "@/components/reset/ResetHistory";
 import PageSkeleton from "@/components/shared/PageSkeleton";
 
 export default function ResetPage() {
   const { user, loading } = useRequireAuth();
   const uid = user?.uid ?? null;
+  const { pastEntries } = useWeeklyReset(uid);
 
   if (loading) return <PageSkeleton />;
   if (!user) return null;
@@ -48,9 +51,15 @@ export default function ResetPage() {
           </p>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "64px" }}>
           <WeeklyReset uid={uid} />
         </div>
+
+        {pastEntries.length > 0 && (
+          <div style={{ borderTop: "1px solid rgba(176,168,154,0.2)", paddingTop: "48px" }}>
+            <ResetHistory entries={pastEntries} />
+          </div>
+        )}
       </div>
     </main>
   );
