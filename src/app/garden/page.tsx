@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import MealGrid, { MealGridHandle } from "@/components/garden/MealGrid";
 import { DayKey } from "@/lib/hooks/useMeals";
@@ -33,9 +33,25 @@ export default function GardenPage() {
   const uid = user?.uid ?? null;
   const mealRef = useRef<HTMLElement>(null);
   const mealGridRef = useRef<MealGridHandle>(null);
+  const activitiesRef = useRef<HTMLElement>(null);
+  const checklistRef = useRef<HTMLElement>(null);
 
   const DAY_KEYS: DayKey[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const todayKey = DAY_KEYS[new Date().getDay()];
+
+  useEffect(() => {
+    if (!user) return;
+    const hash = window.location.hash.slice(1);
+    const map: Record<string, React.RefObject<HTMLElement | null>> = {
+      meals: mealRef,
+      activities: activitiesRef,
+      checklist: checklistRef,
+    };
+    const target = map[hash];
+    if (target?.current) {
+      setTimeout(() => target.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    }
+  }, [user]);
 
   if (loading) return <PageSkeleton />;
   if (!user) return null;
@@ -121,12 +137,12 @@ export default function GardenPage() {
           <MealGrid ref={mealGridRef} uid={uid} />
         </section>
 
-        <section style={{ marginBottom: "48px" }}>
+        <section ref={activitiesRef} style={{ marginBottom: "48px" }}>
           <SectionTitle>Kids&rsquo; Activities</SectionTitle>
           <ActivityScheduler uid={uid} />
         </section>
 
-        <section style={{ marginBottom: "48px" }}>
+        <section ref={checklistRef} style={{ marginBottom: "48px" }}>
           <SectionTitle>Shopping &amp; Errands</SectionTitle>
           <Checklist uid={uid} />
         </section>

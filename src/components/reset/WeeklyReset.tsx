@@ -272,7 +272,7 @@ export default function WeeklyReset({ uid }: { uid: string | null }) {
             A little planning here saves so much mental energy later.
           </p>
           <Link
-            href="/garden"
+            href="/garden#meals"
             style={{
               padding: "12px 28px",
               borderRadius: "var(--radius-full)",
@@ -304,7 +304,7 @@ export default function WeeklyReset({ uid }: { uid: string | null }) {
             Make sure everyone's week is mapped out before it begins.
           </p>
           <Link
-            href="/garden"
+            href="/garden#activities"
             style={{
               padding: "12px 28px",
               borderRadius: "var(--radius-full)",

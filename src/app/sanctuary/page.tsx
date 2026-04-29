@@ -7,6 +7,7 @@ import GratitudeJournal from "@/components/sanctuary/GratitudeJournal";
 import MoodCheckin from "@/components/sanctuary/MoodCheckin";
 import SelfCareReminders from "@/components/sanctuary/SelfCareReminders";
 import WeeklyGardenSummary from "@/components/sanctuary/WeeklyGardenSummary";
+import InsightsDashboard from "@/components/sanctuary/InsightsDashboard";
 import Sprig from "@/components/shared/Sprig";
 
 function SectionTitle({ children, sub }: { children: React.ReactNode; sub?: string }) {
@@ -110,8 +111,13 @@ export default function SanctuaryPage() {
         </section>
 
         {/* Weekly summary */}
-        <section>
+        <section style={{ marginBottom: "48px" }}>
           <WeeklyGardenSummary uid={uid} prominent={isSunday} />
+        </section>
+
+        {/* Insights */}
+        <section>
+          <InsightsDashboard uid={uid} />
         </section>
       </div>
     </main>
