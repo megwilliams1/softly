@@ -29,11 +29,20 @@ export default function HearthPage() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [activeFilter, setActiveFilter] = useState<RecipeCategory | "all">("all");
+  const [search, setSearch] = useState("");
   const isAdmin = isAdminUser(user);
 
-  const filteredRecipes = activeFilter === "all"
-    ? recipes
-    : recipes.filter((r) => (r.category ?? "other") === activeFilter);
+  const q = search.trim().toLowerCase();
+  const filteredRecipes = recipes
+    .filter((r) => activeFilter === "all" || (r.category ?? "other") === activeFilter)
+    .filter((r) => {
+      if (!q) return true;
+      return (
+        r.title.toLowerCase().includes(q) ||
+        r.authorName.toLowerCase().includes(q) ||
+        r.ingredients?.some((ing) => ing.toLowerCase().includes(q))
+      );
+    });
 
   if (loading) return <PageSkeleton />;
   if (!user) return null;
@@ -113,8 +122,46 @@ export default function HearthPage() {
           </div>
         </div>
 
-        {/* Category filter pills */}
+        {/* Search */}
         <div style={{ maxWidth: "960px", margin: "0 auto", padding: "24px 24px 0" }}>
+          <div style={{ position: "relative", maxWidth: "380px" }}>
+            <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontSize: "14px", color: "var(--color-pebble)", pointerEvents: "none" }}>
+              🔍
+            </span>
+            <input
+              type="text"
+              placeholder="Search recipes, ingredients, authors…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px 36px 10px 38px",
+                borderRadius: "var(--radius-full)",
+                border: "1.5px solid rgba(176,168,154,0.4)",
+                backgroundColor: "var(--color-white)",
+                fontFamily: "var(--font-body)",
+                fontSize: "13px",
+                color: "var(--color-soil)",
+                outline: "none",
+                boxSizing: "border-box",
+                transition: "border-color 0.15s ease",
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = "var(--color-hearth-accent)"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(176,168,154,0.4)"; }}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--color-pebble)", fontSize: "14px", lineHeight: 1, padding: "2px" }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Category filter pills */}
+        <div style={{ maxWidth: "960px", margin: "0 auto", padding: "12px 24px 0" }}>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {FILTER_OPTIONS.map((opt) => (
               <button
@@ -147,11 +194,17 @@ export default function HearthPage() {
             </p>
           ) : filteredRecipes.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 24px", color: "var(--color-stone)", fontFamily: "var(--font-body)" }}>
-              <div style={{ fontSize: "2.5rem", marginBottom: "16px" }}>🍲</div>
+              <div style={{ fontSize: "2.5rem", marginBottom: "16px" }}>{q ? "🔍" : "🍲"}</div>
               <p style={{ fontSize: "1rem", marginBottom: "6px", color: "var(--color-soil)", fontFamily: "var(--font-display)" }}>
-                No recipes yet
+                {q ? `No recipes matching "${search}"` : "No recipes yet"}
               </p>
-              <p style={{ fontSize: "13px" }}>Be the first to share something warm.</p>
+              <p style={{ fontSize: "13px" }}>
+                {q ? (
+                  <button onClick={() => setSearch("")} style={{ background: "none", border: "none", color: "var(--color-hearth-accent)", cursor: "pointer", fontFamily: "var(--font-body)", fontSize: "13px", textDecoration: "underline" }}>
+                    Clear search
+                  </button>
+                ) : "Be the first to share something warm."}
+              </p>
             </div>
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "20px" }}>
