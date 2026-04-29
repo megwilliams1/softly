@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-type ResetEntry = {
+export type ResetEntry = {
   weekKey: string;
   weekMood: string;
   intention: string;
@@ -52,5 +52,7 @@ export function useWeeklyReset(uid: string | null) {
     await setDoc(doc(db, "users", uid, "weeklyResets", weekKey), entry);
   }
 
-  return { thisWeekDone, saveReset };
+  const pastEntries = [...history].sort((a, b) => b.weekKey.localeCompare(a.weekKey));
+
+  return { thisWeekDone, saveReset, pastEntries };
 }
